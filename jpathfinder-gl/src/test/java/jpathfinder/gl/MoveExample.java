@@ -28,6 +28,7 @@ public class MoveExample extends JFrame{
     private final Field _field;
     
     private static final int SIZE_COEFF = 1;
+    private static final int MOVING_SHAPES_COUNT = 50;
     
     private static List<MovingShape> movingShapes = new ArrayList<MoveExample.MovingShape>();
     private final long startTime = System.currentTimeMillis();
@@ -35,7 +36,7 @@ public class MoveExample extends JFrame{
     public static void main(String[] args) {
         
         GLField field = new GLField(new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF));
-        field.add(new RectangleShape(new Rectangle(10 * SIZE_COEFF, 10 * SIZE_COEFF, 10 * SIZE_COEFF, 10 * SIZE_COEFF)));
+        field.add(new GLRectangleShape(new Rectangle(10 * SIZE_COEFF, 10 * SIZE_COEFF, 10 * SIZE_COEFF, 10 * SIZE_COEFF)));
 
         field.add(new GLRectangleShape(new Rectangle(40 * SIZE_COEFF, 20 * SIZE_COEFF, 20 * SIZE_COEFF, 20 * SIZE_COEFF)));
 
@@ -45,8 +46,8 @@ public class MoveExample extends JFrame{
 
 //        List<MovingShape> movingShapes = new ArrayList<MoveExample.MovingShape>();
 
-        for (int i = 0; i < 50 ; i++) {
-            Point start = new Point(0, 50 - i);
+        for (int i = 0; i < MOVING_SHAPES_COUNT ; i++) {
+            Point start = new Point(0, MOVING_SHAPES_COUNT - i);
             Point end = new Point(90 * SIZE_COEFF, 99 * SIZE_COEFF  - i);
             movingShapes.add(new MovingShape(field, new GLPointShape(new GLColor(Color.RED), start), end));
             

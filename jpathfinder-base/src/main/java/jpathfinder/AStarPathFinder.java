@@ -1,12 +1,13 @@
 package jpathfinder;
 
 import java.awt.Point;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-
-import org.apache.commons.collections.buffer.PriorityBuffer;
 
 /**
  * thanks to http://www.policyalmanac.org/games/aStarTutorial.htm
@@ -14,9 +15,9 @@ import org.apache.commons.collections.buffer.PriorityBuffer;
  *
  */
 public class AStarPathFinder implements PathFinder {
-//    private final Collection<Node> _open = java.util.Collections.synchronizedList(new ArrayList<Node>());
+    private final Collection<Node> _open = java.util.Collections.synchronizedList(new ArrayList<Node>());
 
-    private final PriorityBuffer _open = new PriorityBuffer(new NodeComparator());
+//    private final PriorityBuffer _open = new PriorityBuffer(new NodeComparator());
     
     private final Collection<Node> _closed = new ArrayList<Node>();
 
@@ -31,6 +32,20 @@ public class AStarPathFinder implements PathFinder {
         this._to = to;
     }
 
+//    private static final PrintStream out;
+//    
+//    static {
+//        try {
+//            out = new PrintStream(new File("out.txt"));
+//        } catch (FileNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+    
+    private static void print(PrintStream out, Point point) {
+        out.println("(" + point.x + "," + point.y + ")");
+    }
+    
     @Override
     public List<Point> getPath() {
         _open.clear();
@@ -38,7 +53,7 @@ public class AStarPathFinder implements PathFinder {
         _open.add(new Node(null, _from));
         Node targetNode = null;
         while (true) {
-//            System.out.println(_open.size());
+//            out.print(_open.size() + " ");
             
             if (_open.isEmpty()) {
                 return null;
@@ -48,19 +63,19 @@ public class AStarPathFinder implements PathFinder {
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-//                int min = Integer.MAX_VALUE;
-//                Node minNode = null;
-//            
-//                synchronized (_open) {
+                int min = Integer.MAX_VALUE;
+                Node minNode = null;
+            
+                synchronized (_open) {
 //                    Node orderderMinNode = _open.iterator().next();
-//                    for (Node node : _open) {
-//                        int f = node.F();
-//                        if (minNode == null || f < min) {
-//                            min = f;
-//                            minNode = node;
-//                        }
-//                    }
-//                }
+                    for (Node node : _open) {
+                        int f = node.F();
+                        if (minNode == null || f < min) {
+                            min = f;
+                            minNode = node;
+                        }
+                    }
+                }
 
 //                  synchronized (_open) {
 //                      for (Object o : _open) {
@@ -68,8 +83,10 @@ public class AStarPathFinder implements PathFinder {
 //                      }
 //                  }
             
-                Node minNode = (Node) _open.remove();
+//                Node minNode = (Node) _open.remove();
 
+//                out.println(minNode);
+                
                 if (minNode._point.equals(_to)) {
                     targetNode = minNode;
                     break;
@@ -85,12 +102,10 @@ public class AStarPathFinder implements PathFinder {
                             } else {
                                 int gToMin = minNode.G(node);
                                 if (gToMin < node.G()) {
-                                    // to update ordered set
-//                                    _open.remove(node);
+                                    System.out.println("optimized");
+                                    _open.remove(node);
                                     node.setParent(minNode);
-                                   
-                                 // to update ordered set
-//                                    _open.add(node);
+                                    _open.add(node);
                                 }
                             }
                         }
@@ -99,7 +114,7 @@ public class AStarPathFinder implements PathFinder {
                 
                 _closed.add(minNode);
                 
-//                _open.remove(minNode);
+                _open.remove(minNode);
                 
 //                System.out.println(_open.size());
         }
@@ -113,11 +128,10 @@ public class AStarPathFinder implements PathFinder {
             }
             targetNode = targetNode._parent;
         }
-        
         return result;
     }
     
-    protected PriorityBuffer getOpen() {
+    protected Collection<Node> getOpen() {
         return _open;
     }
     
