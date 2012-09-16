@@ -98,12 +98,11 @@ public class AStarPathFinder implements PathFinder {
                     // I do not consider the end point to be occupied, so I can move towards it
                     if (_field.contains(point) && (point.equals(_to) || !_field.isOccupied(point))) {
                         if (!_closed.containsKey(point)) {
+                            Node node = new Node(minNode, point);
                             Node got = _open.get(point);
                             if (got == null) {
-                                Node node = new Node(minNode, point);
                                 _open.put(point, node);
                             } else {
-                                Node node = new Node(minNode, point);
                                 int gToMin = minNode.G(got);
                                 if (gToMin < node.G()) {
                                     _open.remove(point);
