@@ -7,7 +7,9 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * thanks to http://www.policyalmanac.org/games/aStarTutorial.htm
@@ -15,11 +17,11 @@ import java.util.List;
  *
  */
 public class AStarPathFinder implements PathFinder {
-    private final Collection<Node> _open = java.util.Collections.synchronizedList(new ArrayList<Node>());
+    private final Map<Point, Node> _open = java.util.Collections.synchronizedMap(new HashMap<Point,Node>());
 
 //    private final PriorityBuffer _open = new PriorityBuffer(new NodeComparator());
     
-    private final Collection<Node> _closed = new ArrayList<Node>();
+    private final Map<Point, Node> _closed = new HashMap<Point, Node>();
 
     private final Field _field;
     private final Point _from;
@@ -50,7 +52,7 @@ public class AStarPathFinder implements PathFinder {
     public List<Point> getPath() {
         _open.clear();
         _closed.clear();
-        _open.add(new Node(null, _from));
+        _open.put(_from, new Node(null, _from));
         Node targetNode = null;
         while (true) {
 //            out.print(_open.size() + " ");
@@ -68,7 +70,7 @@ public class AStarPathFinder implements PathFinder {
             
                 synchronized (_open) {
 //                    Node orderderMinNode = _open.iterator().next();
-                    for (Node node : _open) {
+                    for (Node node : _open.values()) {
                         int f = node.F();
                         if (minNode == null || f < min) {
                             min = f;
@@ -95,26 +97,27 @@ public class AStarPathFinder implements PathFinder {
                 for (Point point : PathUtils.getAdjacents(minNode._point)) {
                     // I do not consider the end point to be occupied, so I can move towards it
                     if (_field.contains(point) && (point.equals(_to) || !_field.isOccupied(point))) {
-                        Node node = new Node(minNode, point);
-                        if (!_closed.contains(node)) {
-                            if (!_open.contains(node)) {
-                                _open.add(node);
+                        if (!_closed.containsKey(point)) {
+                            if (!_open.containsKey(point)) {
+                                Node node = new Node(minNode, point);
+                                _open.put(point, node);
                             } else {
+                                Node node = new Node(minNode, point);
                                 int gToMin = minNode.G(node);
                                 if (gToMin < node.G()) {
                                     System.out.println("optimized");
-                                    _open.remove(node);
+                                    _open.remove(point);
                                     node.setParent(minNode);
-                                    _open.add(node);
+                                    _open.put(point, node);
                                 }
                             }
                         }
                     }
                 }
                 
-                _closed.add(minNode);
+                _closed.put(minNode._point, minNode);
                 
-                _open.remove(minNode);
+                _open.remove(minNode._point);
                 
 //                System.out.println(_open.size());
         }
@@ -130,8 +133,8 @@ public class AStarPathFinder implements PathFinder {
         }
         return result;
     }
-    
-    protected Collection<Node> getOpen() {
+
+    public Map<Point, Node> getOpen() {
         return _open;
     }
     

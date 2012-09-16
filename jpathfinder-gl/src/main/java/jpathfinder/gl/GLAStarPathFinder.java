@@ -17,7 +17,7 @@ public class GLAStarPathFinder extends AStarPathFinder implements GLRenderer {
     public void render(GL gl) {
         GLPointShape shape  = new GLPointShape(new GLColor(java.awt.Color.YELLOW), new Point());
         synchronized (getOpen()) {
-            for (Object node : getOpen()) {
+            for (Object node : getOpen().values()) {
                 shape.setLocation(((Node)node)._point);
                 shape.render(gl);
             }
