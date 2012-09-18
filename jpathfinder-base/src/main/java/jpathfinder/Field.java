@@ -22,10 +22,13 @@ public class Field {
         throw new UnsupportedOperationException();
     }
     
-    public boolean isOccupied(Point point) {
+    public boolean isOccupied(Point point, Point from) {
+        boolean near = from == null || point.distance(from) < 3;
         for (Shape shape : _shapes) {
             if (shape.contains(point)) {
-                return true;
+                if (!shape.isMoving() || near) {
+                    return true;
+                }
             }
         }
         return false;

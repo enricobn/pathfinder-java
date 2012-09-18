@@ -45,7 +45,7 @@ public class SimplePathFinder extends AbstractPathFinder {
                         }
                         if (!field.contains(aentry.getKey())) {
                             i.remove();
-                        } else if (field.isOccupied(aentry.getKey())) {
+                        } else if (field.isOccupied(aentry.getKey(), from)) {
                             i.remove();
                         } else {
                             Integer value = _queue.get(aentry.getKey());

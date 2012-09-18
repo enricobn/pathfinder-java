@@ -92,7 +92,7 @@ public class AStarPathFinder implements PathFinder {
 
                 for (Point point : PathUtils.getAdjacents(minNode.point)) {
                     // I do not consider the end point to be occupied, so I can move towards it
-                    if (_field.contains(point) && (point.equals(_to) || !_field.isOccupied(point))) {
+                    if (_field.contains(point) && (point.equals(_to) || !_field.isOccupied(point, _from))) {
                         if (!_closed.containsKey(point)) {
                             Node node = new Node(minNode, point);
                             Node got = _open.get(point);
@@ -121,7 +121,7 @@ public class AStarPathFinder implements PathFinder {
 
         while (targetNode._parent != null) {
             // the path can contains occupied points. Normally it can be only the end point 
-            if (!_field.isOccupied(targetNode.point)) {
+            if (!_field.isOccupied(targetNode.point, null)) {
                 result.add(targetNode.point);
             }
             targetNode = targetNode._parent;

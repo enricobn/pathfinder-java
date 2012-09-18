@@ -20,8 +20,8 @@ public class FieldTest {
         field.add(new Rectangle(new Point(0, 0), 10, 10));
         field.add(new Rectangle(new Point(20, 20), 10, 10));
         
-        assertTrue(field.isOccupied(new Point(5, 5)));
-        assertFalse(field.isOccupied(new Point(15, 15)));
+        assertTrue(field.isOccupied(new Point(5, 5), null));
+        assertFalse(field.isOccupied(new Point(15, 15), null));
      
     }
 

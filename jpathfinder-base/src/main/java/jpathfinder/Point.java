@@ -24,6 +24,10 @@ public class Point implements Shape, Cloneable {
         return equals(point);
     }
     
+    public int distance(Point point) {
+        return (int) Math.sqrt((_x - point._x) ^ 2 + (_y - point._y) ^ 2);  
+    }
+    
 //    @Override
 //    public Point getLocation() {
 //        return this;
