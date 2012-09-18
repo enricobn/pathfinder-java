@@ -19,11 +19,6 @@ public class Rectangle implements Shape, Cloneable {
                 && point.getY() >= this._point.getY() && point.getY() <= getMaxY();
     }
     
-//    @Override
-//    public Point getLocation() {
-//        return _point;
-//    }
-    
     @Override
     public boolean isMoving() {
         return _moving;
@@ -43,6 +38,14 @@ public class Rectangle implements Shape, Cloneable {
     
     public Point getPoint() {
         return _point;
+    }
+
+    public int getHeight() {
+        return _height;
+    }
+    
+    public int getWidth() {
+        return _width;
     }
     
     public int getMaxX() {

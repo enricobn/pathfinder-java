@@ -18,67 +18,63 @@ import jpathfinder.AStarPathFinder;
 import jpathfinder.Dimension;
 import jpathfinder.Field;
 import jpathfinder.Point;
+import jpathfinder.Rectangle;
 
 import com.sun.opengl.util.Animator;
 
 public class MoveExample extends JFrame{
-    private final Field _field;
-    
     private static final int SIZE_COEFF = 1;
     private static final int MOVING_SHAPES_COUNT = 50;
-    
-    private static List<MovingShape> movingShapes = new ArrayList<MoveExample.MovingShape>();
-    private final long startTime = System.currentTimeMillis();
-    
+        
     public static void main(String[] args) {
-        Collection<GLRenderer> renderers = new ArrayList<GLRenderer>();
-        GLField field = new GLField(new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF));
+        Collection<Rectangle> obstacles = new ArrayList<Rectangle>();
         
-        GLRectangle rect = new GLRectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF); 
-        renderers.add(rect);
-        field.add(rect.getRectangle());
+        obstacles.add(new Rectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF)); 
+        obstacles.add(new Rectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
+        obstacles.add(new Rectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
+        obstacles.add(new Rectangle(new Point(75 * SIZE_COEFF, 75 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
 
-        rect = new GLRectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
-        renderers.add(rect);
-        field.add(rect.getRectangle());
+        Collection<MovingShape> movingShapes = new ArrayList<MoveExample.MovingShape>();
         
-        rect = new GLRectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
-        renderers.add(rect);
-        field.add(rect.getRectangle());
-        
-        rect = new GLRectangle(new Point(75 * SIZE_COEFF, 75 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
-        renderers.add(rect);
-        field.add(rect.getRectangle());
-
         for (int i = 0; i < MOVING_SHAPES_COUNT ; i++) {
             Point start = new Point(0, MOVING_SHAPES_COUNT - i);
             Point end = new Point(90 * SIZE_COEFF, 99 * SIZE_COEFF  - i);
-            MovingShape movingShape = new MovingShape(field, new GLPoint(new GLColor(Color.RED), 
+            MovingShape movingShape = new MovingShape(new GLPoint(new GLColor(Color.RED), 
                     start.getX(), start.getY()), 
                     end);
             movingShapes.add(movingShape);
-            renderers.add(movingShape);
-            field.add(movingShape._glPoint.getPoint());
 
-            movingShape = new MovingShape(field, new GLPoint(new GLColor(Color.BLUE), 
+            movingShape = new MovingShape(new GLPoint(new GLColor(Color.BLUE), 
                     end.getX(), end.getY()), 
                     start);
             movingShapes.add(movingShape);
-            renderers.add(movingShape);
-            field.add(movingShape._glPoint.getPoint());
         }
         
-        MoveExample frame = new MoveExample(field, renderers);
+        MoveExample frame = new MoveExample(new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF), obstacles, movingShapes);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
     
+    private final GLField _field;
     private final List<GLRenderer> _renderers = Collections.synchronizedList(new ArrayList<GLRenderer>());
-    
-    public MoveExample(final GLField field, final Collection<GLRenderer> renderers){
-        _field = field;
-        _renderers.add(field);
-        _renderers.addAll(renderers);
+    private Collection<MovingShape> _movingShapes = new ArrayList<MoveExample.MovingShape>();
+    private final long startTime = System.currentTimeMillis();
+
+    public MoveExample(Dimension fieldDimension, Collection<Rectangle> obstacles, Collection<MovingShape> movingShapes){
+        _field = new GLField(fieldDimension);
+        _movingShapes = movingShapes;
+
+        _renderers.add(_field);
+
+        for (Rectangle obstacle : obstacles) {
+            _field.add(obstacle);
+            _renderers.add(new GLRectangle(obstacle.getPoint(), obstacle.getWidth(), obstacle.getHeight()));
+        }
+        
+        for (MovingShape movingShape : movingShapes) {
+            _renderers.add(movingShape);
+            _field.add(movingShape._glPoint.getPoint());
+        }
         
         setSize(600,600);
         setTitle("Hello Universe");
@@ -101,12 +97,11 @@ public class MoveExample extends JFrame{
     }
     
     public class GraphicsListener implements GLEventListener{
-        
 
         public void display(GLAutoDrawable arg0) {
             boolean exit = true; 
-            for (MovingShape movingShape : movingShapes) {
-                movingShape.next();
+            for (MovingShape movingShape : _movingShapes) {
+                movingShape.next(_field);
                 exit &= movingShape.isArrived();
             }
             if (exit) {
@@ -161,20 +156,18 @@ public class MoveExample extends JFrame{
     }
 
     private static class MovingShape implements GLRenderer {
-        private final Field _field;
         private final GLPoint _glPoint;
         private final Point _end;
         
-        public MovingShape(Field field, GLPoint startShape, Point end) {
+        public MovingShape(GLPoint startShape, Point end) {
             super();
-            _field = field;
             _glPoint = startShape;
             _end = end;
         }
 
-        public void next() {
+        public void next(Field field) {
             if (!isArrived()) {
-                AStarPathFinder finder = new AStarPathFinder(_field, _glPoint.getPoint(), _end);
+                AStarPathFinder finder = new AStarPathFinder(field, _glPoint.getPoint(), _end);
                 List<Point> path = finder.getPath();
                 if (path != null && !path.isEmpty()) {
                     _glPoint.setLocation(path.get(path.size() -1));
