@@ -7,5 +7,6 @@
 	<classpathentry kind="var" path="JOGL_HOME"/>
 	<classpathentry kind="var" path="JOGL_HOME/lib/gluegen-rt.jar"/>
 	<classpathentry kind="var" path="JOGL_HOME/lib/jogl.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

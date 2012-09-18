@@ -1,11 +1,7 @@
 package jpathfinder;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
-
 
 public class Field {
     private final Collection<Shape> _shapes = new ArrayList<Shape>();
@@ -15,7 +11,7 @@ public class Field {
     public Field(Dimension size) {
         super();
         _size = size;
-        _rectangle = new Rectangle(new Point(0,0), size);
+        _rectangle = new Rectangle(new Point(0,0), size.width, size.height);
     }
 
     public void add(Shape shape) {

@@ -1,11 +1,10 @@
 package jpathfinder.gl;
 
-import java.awt.Point;
-
 import javax.media.opengl.GL;
 
 import jpathfinder.AStarPathFinder;
 import jpathfinder.Field;
+import jpathfinder.Point;
 
 public class GLAStarPathFinder extends AStarPathFinder implements GLRenderer {
 
@@ -15,10 +14,10 @@ public class GLAStarPathFinder extends AStarPathFinder implements GLRenderer {
 
     @Override
     public void render(GL gl) {
-        GLPointShape shape  = new GLPointShape(new GLColor(java.awt.Color.YELLOW), new Point());
+        GLPoint shape  = new GLPoint(new GLColor(java.awt.Color.YELLOW), 0, 0);
         synchronized (getOpen()) {
             for (Object node : getOpen().values()) {
-                shape.setLocation(((Node)node)._point);
+                shape.setLocation(((Node)node).point);
                 shape.render(gl);
             }
         }

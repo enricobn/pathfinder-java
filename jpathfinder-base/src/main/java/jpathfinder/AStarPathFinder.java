@@ -1,11 +1,7 @@
 package jpathfinder;
 
-import java.awt.Point;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +41,7 @@ public class AStarPathFinder implements PathFinder {
 //    }
     
     private static void print(PrintStream out, Point point) {
-        out.println("(" + point.x + "," + point.y + ")");
+        out.println(point);
     }
     
     @Override
@@ -89,12 +85,12 @@ public class AStarPathFinder implements PathFinder {
 
 //                out.println(minNode);
                 
-                if (minNode._point.equals(_to)) {
+                if (minNode.point.equals(_to)) {
                     targetNode = minNode;
                     break;
                 }
 
-                for (Point point : PathUtils.getAdjacents(minNode._point)) {
+                for (Point point : PathUtils.getAdjacents(minNode.point)) {
                     // I do not consider the end point to be occupied, so I can move towards it
                     if (_field.contains(point) && (point.equals(_to) || !_field.isOccupied(point))) {
                         if (!_closed.containsKey(point)) {
@@ -114,9 +110,9 @@ public class AStarPathFinder implements PathFinder {
                     }
                 }
                 
-                _closed.put(minNode._point, minNode);
+                _closed.put(minNode.point, minNode);
                 
-                _open.remove(minNode._point);
+                _open.remove(minNode.point);
                 
 //                System.out.println(_open.size());
         }
@@ -125,8 +121,8 @@ public class AStarPathFinder implements PathFinder {
 
         while (targetNode._parent != null) {
             // the path can contains occupied points. Normally it can be only the end point 
-            if (!_field.isOccupied(targetNode._point)) {
-                result.add(targetNode._point);
+            if (!_field.isOccupied(targetNode.point)) {
+                result.add(targetNode.point);
             }
             targetNode = targetNode._parent;
         }
@@ -138,7 +134,7 @@ public class AStarPathFinder implements PathFinder {
     }
     
     public class Node {
-        public final Point _point;
+        public final Point point;
         private Node _parent;
         private Integer _g;
         private Integer _h;
@@ -147,7 +143,7 @@ public class AStarPathFinder implements PathFinder {
         public Node(Node parent, Point point) {
             super();
             _parent = parent;
-            _point = point;
+            this.point = point;
         }
 
         @Override
@@ -155,7 +151,7 @@ public class AStarPathFinder implements PathFinder {
             final int prime = 31;
             int result = 1;
             result = prime * result
-                    + ((_point == null) ? 0 : _point.hashCode());
+                    + ((point == null) ? 0 : point.hashCode());
             return result;
         }
 
@@ -168,10 +164,10 @@ public class AStarPathFinder implements PathFinder {
             if (getClass() != obj.getClass())
                 return false;
             Node other = (Node) obj;
-            if (_point == null) {
-                if (other._point != null)
+            if (point == null) {
+                if (other.point != null)
                     return false;
-            } else if (!_point.equals(other._point))
+            } else if (!point.equals(other.point))
                 return false;
             return true;
         }
@@ -192,7 +188,7 @@ public class AStarPathFinder implements PathFinder {
 
         int H() {
             if (_h == null) {
-                _h = (Math.abs(_to.x - _point.x) + Math.abs(_to.y - _point.y)) * 10;
+                _h = (Math.abs(_to.getX() - point.getX()) + Math.abs(_to.getY() - point.getY())) * 10;
             }
             return _h;
         }
@@ -202,7 +198,7 @@ public class AStarPathFinder implements PathFinder {
                 return 0;
             }
             int g = node.G();
-            if (_point.x == node._point.x || _point.y == node._point.y) {
+            if (point.getX() == node.point.getX() || point.getY() == node.point.getY()) {
                 g += 10;
             } else {
                 g += 14;
@@ -218,7 +214,7 @@ public class AStarPathFinder implements PathFinder {
         
         @Override
         public String toString() {
-            return "(" + _point.x + "," + _point.y + ")=" + F();
+            return "(" + point.getX() + "," + point.getY() + ")=" + F();
         }
         
     }

@@ -1,9 +1,6 @@
 package jpathfinder.gl;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -16,16 +13,16 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
 import javax.swing.JFrame;
 
+import jpathfinder.Dimension;
 import jpathfinder.Field;
-import jpathfinder.RectangleShape;
-import jpathfinder.Shape;
+import jpathfinder.Point;
 
 import com.sun.opengl.util.Animator;
 
 public class PathExample extends JFrame{
 //    private static final int STENCIL_MASK = 0x1;
     private final Field _field;
-    private final Shape _me;
+    private final GLPoint _me;
 //    private int _xDir = 1;
 //    private int _yDir = 1;
 //    private final Point _startPoint;
@@ -34,47 +31,57 @@ public class PathExample extends JFrame{
     private static final int SIZE_COEFF = 1;
     
     public static void main(String[] args) {
+        Collection<GLRenderer> renderers = new ArrayList<GLRenderer>();
+        GLField field = new GLField(new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF));
         
-//        GLField field = new GLField(new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF));
-//        field.add(new GLRectangleShape(new Rectangle(10 * SIZE_COEFF, 10 * SIZE_COEFF, 10 * SIZE_COEFF, 10 * SIZE_COEFF)));
-//
-//        field.add(new GLRectangleShape(new Rectangle(40 * SIZE_COEFF, 20 * SIZE_COEFF, 20 * SIZE_COEFF, 20 * SIZE_COEFF)));
-//
-//        field.add(new GLRectangleShape(new Rectangle(40 * SIZE_COEFF, 60 * SIZE_COEFF, 20 * SIZE_COEFF, 20 * SIZE_COEFF)));
-//
-//        field.add(new GLRectangleShape(new Rectangle(80 * SIZE_COEFF, 80 * SIZE_COEFF, 10 * SIZE_COEFF, 10 * SIZE_COEFF)));
-//
-//        Point startPoint = new Point(0, 0);
+        GLRectangle rect = new GLRectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF); 
+        renderers.add(rect);
+        field.add(rect.getRectangle());
+        
+        rect = new GLRectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
+        renderers.add(rect);
+        field.add(rect.getRectangle());
+        
+        rect = new GLRectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
+        renderers.add(rect);
+        field.add(rect.getRectangle());
+        
+        rect = new GLRectangle(new Point(80 * SIZE_COEFF, 80 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
+        renderers.add(rect);
+        field.add(rect.getRectangle());
+
+        Point startPoint = new Point(0, 0);
+        
+        Point endPoint = new Point(99 * SIZE_COEFF, 99 * SIZE_COEFF);
+
 //        
-//        Point endPoint = new Point(99 * SIZE_COEFF, 99 * SIZE_COEFF);
+//        GLField field = new GLField(new Dimension(8, 6));
+//        field.add(new GLRectangleShape(new Point(4, 1), 1, 3));
+//
+//        Point startPoint = new Point(2, 2);
+//        
+//        Point endPoint = new Point(6, 2);
 
         
-        GLField field = new GLField(new Dimension(8, 6));
-        field.add(new GLRectangleShape(new Rectangle(4, 1, 1, 3)));
-
-        Point startPoint = new Point(2, 2);
-        
-        Point endPoint = new Point(6, 2);
-
-        
-        PathExample frame = new PathExample(field, startPoint, endPoint);
+        PathExample frame = new PathExample(field, startPoint, endPoint, renderers);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
     
     private final Collection<GLRenderer> _renderers = Collections.synchronizedList(new ArrayList<GLRenderer>());
     
-    public PathExample(final GLField field, final Point start, final Point end){
+    public PathExample(final GLField field, final Point start, final Point end, Collection<GLRenderer> renderers){
         _field = field;
         _renderers.add(field);
+        _renderers.addAll(renderers);
         
-        _me = new GLPointShape(new GLColor(Color.RED), start);
+        _me = new GLPoint(new GLColor(Color.RED), start.getX(), start.getY());
         
         // TODO ugly
         _renderers.add((GLRenderer)_me);
 
-        _renderers.add(new GLPointShape(new GLColor(Color.GREEN), end));
-        _renderers.add(new GLPointShape(new GLColor(Color.RED), start));
+        _renderers.add(new GLPoint(new GLColor(Color.GREEN), end.getX(), end.getY()));
+        _renderers.add(new GLPoint(new GLColor(Color.RED), start.getX(), start.getY()));
 
 //        final SimplePathFinder finder = new SimplePathFinder(_field, start, end);
         final GLAStarPathFinder finder = new GLAStarPathFinder(_field, start, end);
@@ -113,7 +120,7 @@ public class PathExample extends JFrame{
         
         th.start();
         
-        _field.add(_me);
+        _field.add(_me.getPoint());
     }
     
     public class GraphicsListener implements GLEventListener{
@@ -178,7 +185,7 @@ public class PathExample extends JFrame{
 
         @Override
         public void render(GL gl) {
-            GLPointShape shape  = new GLPointShape(new GLColor(Color.GREEN), new Point());
+            GLPoint shape  = new GLPoint(new GLColor(Color.GREEN), 0, 0);
             for (Point point : _path) {
                 shape.setLocation(point);
                 shape.render(gl);
