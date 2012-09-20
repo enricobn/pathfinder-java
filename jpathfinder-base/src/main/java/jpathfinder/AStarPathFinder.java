@@ -101,9 +101,7 @@ public class AStarPathFinder implements PathFinder {
                             } else {
                                 int gToMin = minNode.G(got);
                                 if (gToMin < node.G()) {
-                                    _open.remove(point);
-                                    node.setParent(minNode);
-                                    _open.put(point, node);
+                                    got.setParent(minNode);
                                 }
                             }
                         }
