@@ -14,14 +14,17 @@ import javax.media.opengl.GLEventListener;
 import javax.swing.JFrame;
 
 import jpathfinder.Dimension;
-import jpathfinder.Field;
+import jpathfinder.PathField;
 import jpathfinder.Point;
+import jpathfinder.PointFieldShape;
+import jpathfinder.Rectangle;
+import jpathfinder.RectangleFieldShape;
 
 import com.sun.opengl.util.Animator;
 
 public class PathExample extends JFrame{
 //    private static final int STENCIL_MASK = 0x1;
-    private final Field _field;
+    private final PathField _field;
     private final GLPoint _me;
 //    private int _xDir = 1;
 //    private int _yDir = 1;
@@ -32,23 +35,29 @@ public class PathExample extends JFrame{
     
     public static void main(String[] args) {
         Collection<GLRenderer> renderers = new ArrayList<GLRenderer>();
-        GLField field = new GLField(new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF));
+        PathField pathField = new PathField(new Dimension(100, 100));
         
-        GLRectangle rect = new GLRectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF); 
-        renderers.add(rect);
-        field.add(rect.getRectangle());
+        Rectangle rect = new Rectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
         
-        rect = new GLRectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
-        renderers.add(rect);
-        field.add(rect.getRectangle());
+        GLRectangle glrect = new GLRectangle(rect); 
+        renderers.add(glrect);
+        pathField.add(new RectangleFieldShape(rect));
         
-        rect = new GLRectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
-        renderers.add(rect);
-        field.add(rect.getRectangle());
+        rect = new Rectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
+        glrect = new GLRectangle(rect);
+        renderers.add(glrect);
+        pathField.add(new RectangleFieldShape(rect));
         
-        rect = new GLRectangle(new Point(80 * SIZE_COEFF, 80 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
-        renderers.add(rect);
-        field.add(rect.getRectangle());
+        
+        rect = new Rectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
+        glrect = new GLRectangle(rect);
+        renderers.add(glrect);
+        pathField.add(new RectangleFieldShape(rect));
+        
+        rect = new Rectangle(new Point(80 * SIZE_COEFF, 80 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
+        glrect = new GLRectangle(rect);
+        renderers.add(glrect);
+        pathField.add(new RectangleFieldShape(rect));
 
         Point startPoint = new Point(0, 0);
         
@@ -63,16 +72,19 @@ public class PathExample extends JFrame{
 //        Point endPoint = new Point(6, 2);
 
         
-        PathExample frame = new PathExample(field, startPoint, endPoint, renderers);
+        PathExample frame = new PathExample(pathField, startPoint, endPoint, renderers);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
     
     private final Collection<GLRenderer> _renderers = Collections.synchronizedList(new ArrayList<GLRenderer>());
     
-    public PathExample(final GLField field, final Point start, final Point end, Collection<GLRenderer> renderers){
+    public PathExample(final PathField field, final Point start, final Point end, Collection<GLRenderer> renderers){
+         GLField glfield = new GLField(field, new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF));
+        
+
         _field = field;
-        _renderers.add(field);
+        _renderers.add(glfield);
         _renderers.addAll(renderers);
         
         _me = new GLPoint(new GLColor(Color.RED), start.getX(), start.getY());
@@ -120,7 +132,7 @@ public class PathExample extends JFrame{
         
         th.start();
         
-        _field.add(_me.getPoint());
+        field.add(new PointFieldShape(_me.getPoint().getX(), _me.getPoint().getY()));
     }
     
     public class GraphicsListener implements GLEventListener{

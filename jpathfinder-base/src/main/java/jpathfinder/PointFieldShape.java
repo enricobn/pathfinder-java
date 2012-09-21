@@ -1,10 +1,11 @@
 package jpathfinder;
 
-public class Point implements Cloneable {
+public class PointFieldShape implements FieldShape, Cloneable {
     private int _x;
     private int _y;
+    private boolean _moving = false;
     
-    public Point(int x, int y) {
+    public PointFieldShape(int x, int y) {
         super();
         this._x = x;
         this._y = y;
@@ -18,18 +19,32 @@ public class Point implements Cloneable {
         return _y;
     }
 
-    public int distance(Point point) {
-        return (int) Math.sqrt((_x - point._x) ^ 2 + (_y - point._y) ^ 2);  
+    @Override
+    public boolean contains(Point point) {
+        return point.getX() == _x && point.getY() == _y;
     }
     
+    public int distance(Point point) {
+        return (int) Math.sqrt((_x - point.getX()) ^ 2 + (_y - point.getY()) ^ 2);  
+    }
+    
+    @Override
+    public boolean isMoving() {
+        return _moving;
+    }
+    
+    @Override
     public void move(int xDiff, int yDiff) {
         _x += xDiff;
         _y += yDiff;
+        _moving = true;
     }
     
+    @Override
     public void setLocation(Point location) {
-        _x = location._x;
-        _y = location._y;
+        _x = location.getX();
+        _y = location.getY();
+        _moving = true;
     }
 
     @Override
@@ -49,7 +64,7 @@ public class Point implements Cloneable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Point other = (Point) obj;
+        PointFieldShape other = (PointFieldShape) obj;
         if (_x != other._x)
             return false;
         if (_y != other._y)
@@ -63,8 +78,8 @@ public class Point implements Cloneable {
     }
     
     @Override
-    public Point clone() throws CloneNotSupportedException {
-        return (Point) super.clone();
+    public PointFieldShape clone() throws CloneNotSupportedException {
+        return (PointFieldShape) super.clone();
     }
     
 }

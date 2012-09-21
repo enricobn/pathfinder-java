@@ -1,28 +1,43 @@
 package jpathfinder;
 
-public class Rectangle implements Cloneable {
+public class RectangleFieldShape implements FieldShape, Cloneable {
     private Point _point;
     private int _width;
     private int _height;
+    private boolean _moving = false;
 
-    public Rectangle(Point point, int width, int height) {
+    public RectangleFieldShape(Rectangle rectangle) {
+        this(rectangle.getPoint(), rectangle.getWidth(), rectangle.getHeight());
+    }
+    
+    public RectangleFieldShape(Point point, int width, int height) {
         super();
         this._point = point;
         this._width = width;
         this._height = height;
     }
 
-    public void move(int xDiff, int yDiff) {
-        _point.move(xDiff, yDiff);
-    }
-    
+    @Override
     public boolean contains(Point point) {
         return point.getX() >= this._point.getX() && point.getX() <= getMaxX()
-            && point.getY() >= this._point.getY() && point.getY() <= getMaxY();
+                && point.getY() >= this._point.getY() && point.getY() <= getMaxY();
     }
     
+    @Override
+    public boolean isMoving() {
+        return _moving;
+    }
+    
+    @Override
+    public void move(int xDiff, int yDiff) {
+        _point.move(xDiff, yDiff);
+        _moving = true;
+    }
+    
+    @Override
     public void setLocation(Point location) {
         _point = location;
+        _moving = true;
     }
     
     public Point getPoint() {
@@ -63,7 +78,7 @@ public class Rectangle implements Cloneable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Rectangle other = (Rectangle) obj;
+        RectangleFieldShape other = (RectangleFieldShape) obj;
         if (_height != other._height)
             return false;
         if (_point == null) {
@@ -82,8 +97,8 @@ public class Rectangle implements Cloneable {
     }
     
     @Override
-    public Rectangle clone() throws CloneNotSupportedException {
-        Rectangle cloned = (Rectangle) super.clone();
+    public RectangleFieldShape clone() throws CloneNotSupportedException {
+        RectangleFieldShape cloned = (RectangleFieldShape) super.clone();
         cloned._point = _point.clone();
         return cloned;
     }

@@ -1,6 +1,6 @@
 package jpathfinder;
 
-public interface Shape {
+public interface FieldShape {
 
 //    Point getLocation();
 //    

@@ -19,13 +19,13 @@ public class AStarPathFinder implements PathFinder {
     
     private final Map<Point, Node> _closed = new HashMap<Point, Node>();
 
-    private final Field _field;
+    private final PathField _field;
     private final Point _from;
     private final Point _to;
     
-    public AStarPathFinder(Field field, Point from, Point to) {
+    public AStarPathFinder(PathField pathField, Point from, Point to) {
         super();
-        this._field = field;
+        this._field = pathField;
         this._from = from;
         this._to = to;
     }

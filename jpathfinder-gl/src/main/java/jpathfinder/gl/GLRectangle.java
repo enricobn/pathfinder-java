@@ -8,8 +8,12 @@ import jpathfinder.Rectangle;
 public class GLRectangle implements GLRenderer {
     private Rectangle _recRectangle;
 
+    public GLRectangle(Rectangle rectangle) {
+        _recRectangle = rectangle;
+    }
+    
     public GLRectangle(Point point, int width, int height) {
-        _recRectangle = new Rectangle(point, width, height);
+        this(new Rectangle(point, width, height));
     }
 
     public void move(int xDiff, int yDiff) {

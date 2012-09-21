@@ -3,13 +3,13 @@ package jpathfinder.gl;
 import javax.media.opengl.GL;
 
 import jpathfinder.AStarPathFinder;
-import jpathfinder.Field;
+import jpathfinder.PathField;
 import jpathfinder.Point;
 
 public class GLAStarPathFinder extends AStarPathFinder implements GLRenderer {
 
-    public GLAStarPathFinder(Field field, Point from, Point to) {
-        super(field, from, to);
+    public GLAStarPathFinder(PathField pathField, Point from, Point to) {
+        super(pathField, from, to);
     }
 
     @Override

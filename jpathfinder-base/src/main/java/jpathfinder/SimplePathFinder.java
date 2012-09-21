@@ -10,13 +10,13 @@ import java.util.Map;
 public class SimplePathFinder extends AbstractPathFinder {
     private final Map<Point, Integer> _queue = new HashMap<Point, Integer>();//Collections.synchronizedMap(new HashMap<Point, Integer>());
 
-    private final Field field;
+    private final PathField pathField;
     private final Point from;
     private final Point to;
     
-    public SimplePathFinder(Field field, Point from, Point to) {
+    public SimplePathFinder(PathField pathField, Point from, Point to) {
         super();
-        this.field = field;
+        this.pathField = pathField;
         this.from = from;
         this.to = to;
     }
@@ -43,9 +43,9 @@ public class SimplePathFinder extends AbstractPathFinder {
                         if (aentry.getKey().equals(from)) {
                             continue;
                         }
-                        if (!field.contains(aentry.getKey())) {
+                        if (!pathField.contains(aentry.getKey())) {
                             i.remove();
-                        } else if (field.isOccupied(aentry.getKey(), from)) {
+                        } else if (pathField.isOccupied(aentry.getKey(), from)) {
                             i.remove();
                         } else {
                             Integer value = _queue.get(aentry.getKey());

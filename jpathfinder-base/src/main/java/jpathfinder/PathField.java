@@ -3,30 +3,31 @@ package jpathfinder;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Field {
-    private final Collection<Shape> _shapes = new ArrayList<Shape>();
+public class PathField {
+    private final Collection<FieldShape> _fieldShapes = new ArrayList<FieldShape>();
     private final Dimension _size;
     private final Rectangle _rectangle;
     
-    public Field(Dimension size) {
+    public PathField(Dimension size) {
         super();
         _size = size;
         _rectangle = new Rectangle(new Point(0,0), size.width, size.height);
     }
 
-    public void add(Shape shape) {
-        _shapes.add(shape);
+    public void add(FieldShape fieldShape) {
+        _fieldShapes.add(fieldShape);
     }
     
-    public void remove(Shape shape) {
+    // TODO
+    public void remove(FieldShape fieldShape) {
         throw new UnsupportedOperationException();
     }
     
     public boolean isOccupied(Point point, Point from) {
         boolean near = from == null || point.distance(from) < 3;
-        for (Shape shape : _shapes) {
-            if (shape.contains(point)) {
-                if (!shape.isMoving() || near) {
+        for (FieldShape fieldShape : _fieldShapes) {
+            if (fieldShape.contains(point)) {
+                if (!fieldShape.isMoving() || near) {
                     return true;
                 }
             }
@@ -42,8 +43,8 @@ public class Field {
         return _size;
     }
     
-    public Collection<Shape> getShapes() {
-        return _shapes;
+    public Collection<FieldShape> getShapes() {
+        return _fieldShapes;
     }
 
     
