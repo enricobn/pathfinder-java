@@ -7,14 +7,16 @@ import jpathfinder.PathField;
 import jpathfinder.Point;
 
 public class GLAStarPathFinder extends AStarPathFinder implements GLRenderer {
-
-    public GLAStarPathFinder(PathField pathField, Point from, Point to) {
-        super(pathField, from, to);
+    private final GLField _field;
+    
+    public GLAStarPathFinder(GLField field, Point from, Point to) {
+        super(field.getPathField(), from, to);
+        _field = field;
     }
 
     @Override
     public void render(GL gl) {
-        GLPoint shape  = new GLPoint(new GLColor(java.awt.Color.YELLOW), 0, 0);
+        GLPoint shape  = new GLPoint(_field, new GLColor(java.awt.Color.YELLOW), 0, 0);
         synchronized (getOpen()) {
             for (Object node : getOpen().values()) {
                 shape.setLocation(((Node)node).point);

@@ -37,25 +37,27 @@ public class PathExample extends JFrame{
         Collection<GLRenderer> renderers = new ArrayList<GLRenderer>();
         PathField pathField = new PathField(new Dimension(100, 100));
         
+        GLField glfield = new GLField(pathField, new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF));
+        
         Rectangle rect = new Rectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
         
-        GLRectangle glrect = new GLRectangle(rect); 
+        GLRectangle glrect = new GLRectangle(glfield, rect); 
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
         
         rect = new Rectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
-        glrect = new GLRectangle(rect);
+        glrect = new GLRectangle(glfield, rect);
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
         
         
         rect = new Rectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
-        glrect = new GLRectangle(rect);
+        glrect = new GLRectangle(glfield, rect);
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
         
         rect = new Rectangle(new Point(80 * SIZE_COEFF, 80 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
-        glrect = new GLRectangle(rect);
+        glrect = new GLRectangle(glfield, rect);
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
 
@@ -72,31 +74,30 @@ public class PathExample extends JFrame{
 //        Point endPoint = new Point(6, 2);
 
         
-        PathExample frame = new PathExample(pathField, startPoint, endPoint, renderers);
+        PathExample frame = new PathExample(glfield, startPoint, endPoint, renderers);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
     
     private final Collection<GLRenderer> _renderers = Collections.synchronizedList(new ArrayList<GLRenderer>());
+    private final GLField _glField;
     
-    public PathExample(final PathField field, final Point start, final Point end, Collection<GLRenderer> renderers){
-         GLField glfield = new GLField(field, new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF));
-        
-
-        _field = field;
-        _renderers.add(glfield);
+    public PathExample(final GLField glField, final Point start, final Point end, Collection<GLRenderer> renderers){
+        _glField = glField;
+        _field = glField.getPathField();
+        _renderers.add(glField);
         _renderers.addAll(renderers);
         
-        _me = new GLPoint(new GLColor(Color.RED), start.getX(), start.getY());
+        _me = new GLPoint(glField, new GLColor(Color.RED), start.getX(), start.getY());
         
         // TODO ugly
         _renderers.add((GLRenderer)_me);
 
-        _renderers.add(new GLPoint(new GLColor(Color.GREEN), end.getX(), end.getY()));
-        _renderers.add(new GLPoint(new GLColor(Color.RED), start.getX(), start.getY()));
+        _renderers.add(new GLPoint(glField, new GLColor(Color.GREEN), end.getX(), end.getY()));
+        _renderers.add(new GLPoint(glField, new GLColor(Color.RED), start.getX(), start.getY()));
 
 //        final SimplePathFinder finder = new SimplePathFinder(_field, start, end);
-        final GLAStarPathFinder finder = new GLAStarPathFinder(_field, start, end);
+        final GLAStarPathFinder finder = new GLAStarPathFinder(glField, start, end);
         _renderers.add(finder);
                 
         setSize(600,600);
@@ -132,7 +133,7 @@ public class PathExample extends JFrame{
         
         th.start();
         
-        field.add(new PointFieldShape(_me.getPoint().getX(), _me.getPoint().getY()));
+        _field.add(new PointFieldShape(_me.getPoint().getX(), _me.getPoint().getY()));
     }
     
     public class GraphicsListener implements GLEventListener{
@@ -187,7 +188,7 @@ public class PathExample extends JFrame{
     }
     static final long serialVersionUID=100;
     
-    private static class PathRenderer implements GLRenderer {
+    private class PathRenderer implements GLRenderer {
         private final Collection<Point> _path;
         
         public PathRenderer(Collection<Point> path) {
@@ -197,7 +198,7 @@ public class PathExample extends JFrame{
 
         @Override
         public void render(GL gl) {
-            GLPoint shape  = new GLPoint(new GLColor(Color.GREEN), 0, 0);
+            GLPoint shape  = new GLPoint(_glField, new GLColor(Color.GREEN), 0, 0);
             for (Point point : _path) {
                 shape.setLocation(point);
                 shape.render(gl);

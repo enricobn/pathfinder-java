@@ -7,9 +7,7 @@ import javax.media.opengl.GL;
 
 import jpathfinder.Dimension;
 import jpathfinder.PathField;
-import jpathfinder.FieldShape;
-import jpathfinder.PointFieldShape;
-import jpathfinder.RectangleFieldShape;
+import jpathfinder.Point;
 
 public class GLField implements GLRenderer {
     private final PathField _pathField;
@@ -32,15 +30,18 @@ public class GLField implements GLRenderer {
         for (GLShape shape : _shapes) {
             shape.render(gl);
         }
-//        for (FieldShape fieldShape : _pathField.getShapes()) {
-//            if (fieldShape instanceof RectangleFieldShape) {
-//                RectangleFieldShape rectangleFieldShape = (RectangleFieldShape) fieldShape;
-//                new GLRectangle(rectangleFieldShape.getPoint(), rectangleFieldShape.getWidth(), rectangleFieldShape.getHeight()).render(gl);
-//            } else if (fieldShape instanceof PointFieldShape) {
-//                PointFieldShape pointFieldShape = (PointFieldShape) fieldShape;
-//                new GLPoint(GLColor.BLUE, pointFieldShape.getX(), pointFieldShape.getY()).render(gl);
-//            }
-//        }
+    }
+    
+    public int toPathFieldX(int glX) {
+        return (int) ((float)glX / _dimension.width * _pathField.getSize().width);
+    }
+
+    public int toPathFieldY(int glY) {
+        return (int) ((float)glY / _dimension.height * _pathField.getSize().height);
+    }
+    
+    public Point toPathField(Point glPoint) {
+        return new Point(toPathFieldX(glPoint.getX()), toPathFieldY(glPoint.getY()));
     }
     
     public Dimension getSize() {

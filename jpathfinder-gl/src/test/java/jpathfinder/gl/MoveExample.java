@@ -33,10 +33,10 @@ public class MoveExample extends JFrame{
         PathField pathField = new PathField(new Dimension(100, 100));
         
         GLField glField = new GLField(pathField, new Dimension(100, 100));
-        glField.add(new GLRectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
-        glField.add(new GLRectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
-        glField.add(new GLRectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
-        glField.add(new GLRectangle(new Point(75 * SIZE_COEFF, 75 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
+        glField.add(new GLRectangle(glField, new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
+        glField.add(new GLRectangle(glField, new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
+        glField.add(new GLRectangle(glField, new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
+        glField.add(new GLRectangle(glField, new Point(75 * SIZE_COEFF, 75 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
 
         Collection<MovingShape> movingShapes = new ArrayList<MoveExample.MovingShape>();
         
@@ -44,12 +44,12 @@ public class MoveExample extends JFrame{
             Point start = new Point(0, MOVING_SHAPES_COUNT - i);
             Point end = new Point(90 * SIZE_COEFF, 99 * SIZE_COEFF  - i);
             MovingShape movingShape = new MovingShape(
-                    new GLPoint(GLColor.RED, start.getX(), start.getY()),
+                    new GLPoint(glField, GLColor.RED, start.getX(), start.getY()),
                     end);
             movingShapes.add(movingShape);
 
             movingShape = new MovingShape(
-                    new GLPoint(GLColor.BLUE, end.getX(), end.getY()),
+                    new GLPoint(glField, GLColor.BLUE, end.getX(), end.getY()),
                     start);
             movingShapes.add(movingShape);
         }

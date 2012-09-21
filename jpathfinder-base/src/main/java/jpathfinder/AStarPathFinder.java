@@ -40,6 +40,10 @@ public class AStarPathFinder implements PathFinder {
 //        }
 //    }
     
+    public PathField getPathField() {
+        return _field;
+    }
+    
     private static void print(PrintStream out, Point point) {
         out.println(point);
     }

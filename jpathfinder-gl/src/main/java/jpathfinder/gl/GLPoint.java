@@ -1,20 +1,23 @@
 package jpathfinder.gl;
 
 import javax.media.opengl.GL;
+import javax.swing.text.GlyphView.GlyphPainter;
 
 import jpathfinder.FieldShape;
 import jpathfinder.Point;
 import jpathfinder.PointFieldShape;
 
 public class GLPoint implements GLShape {
+    private final GLField _field;
     private final GLColor _color;
     private final PointFieldShape _pointFieldShape; 
     private Point _point;
 
-    public GLPoint(GLColor color, int x, int y) {
+    public GLPoint(GLField field, GLColor color, int x, int y) {
+        _field = field;
         _color = color;
         _point = new Point(x, y);
-        _pointFieldShape = new PointFieldShape(x, y);
+        _pointFieldShape = new PointFieldShape(field.toPathFieldX(x), field.toPathFieldY(y));
     }
 
     public Point getPoint() {

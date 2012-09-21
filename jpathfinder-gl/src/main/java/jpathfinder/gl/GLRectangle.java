@@ -8,16 +8,19 @@ import jpathfinder.Rectangle;
 import jpathfinder.RectangleFieldShape;
 
 public class GLRectangle implements GLShape {
+    private final GLField _field;
     private final Rectangle _recRectangle;
     private final RectangleFieldShape _recRectangleFieldShape;
 
-    public GLRectangle(Rectangle rectangle) {
+    public GLRectangle(GLField field, Rectangle rectangle) {
+        _field = field;
         _recRectangle = rectangle;
-        _recRectangleFieldShape = new RectangleFieldShape(rectangle);
+        _recRectangleFieldShape = new RectangleFieldShape(field.toPathField(rectangle.getPoint()), field.toPathFieldX(rectangle.getWidth()), 
+                field.toPathFieldY(rectangle.getHeight()));
     }
     
-    public GLRectangle(Point point, int width, int height) {
-        this(new Rectangle(point, width, height));
+    public GLRectangle(GLField field, Point point, int width, int height) {
+        this(field, new Rectangle(point, width, height));
     }
 
     public void move(int xDiff, int yDiff) {
