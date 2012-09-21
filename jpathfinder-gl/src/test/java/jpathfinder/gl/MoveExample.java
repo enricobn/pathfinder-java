@@ -42,21 +42,15 @@ public class MoveExample extends JFrame{
         for (int i = 0; i < MOVING_SHAPES_COUNT ; i++) {
             Point start = new Point(0, MOVING_SHAPES_COUNT - i);
             Point end = new Point(90 * SIZE_COEFF, 99 * SIZE_COEFF  - i);
-            try {
-                MovingShape movingShape = new MovingShape(new GLPoint(new GLColor(Color.RED), 
-                        start.getX(), start.getY()), 
-                        start.clone(), 
-                        end);
-                movingShapes.add(movingShape);
+            MovingShape movingShape = new MovingShape(
+                    new PointFieldShape(start.getX(), start.getY()),
+                    end);
+            movingShapes.add(movingShape);
 
-                movingShape = new MovingShape(new GLPoint(new GLColor(Color.BLUE), 
-                        end.getX(), end.getY()), 
-                        end.clone(),
-                        start);
-                movingShapes.add(movingShape);
-            } catch (CloneNotSupportedException e) {
-                throw new RuntimeException(e);
-            }
+            movingShape = new MovingShape(
+                    new PointFieldShape(end.getX(), end.getY()),
+                    start);
+            movingShapes.add(movingShape);
         }
         
         MoveExample frame = new MoveExample(pathField, new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF), movingShapes);
@@ -76,16 +70,9 @@ public class MoveExample extends JFrame{
         _movingShapes = movingShapes;
 
         _renderers.add(_field);
-
-        for (FieldShape fieldShape : pathField.getShapes()) {
-            if (fieldShape instanceof RectangleFieldShape) {
-                RectangleFieldShape rectangleFieldShape = (RectangleFieldShape) fieldShape;
-                _renderers.add(new GLRectangle(rectangleFieldShape.getPoint(), rectangleFieldShape.getWidth(), rectangleFieldShape.getHeight()));
-            }
-        }
         
         for (MovingShape movingShape : movingShapes) {
-            _renderers.add(movingShape);
+//            _renderers.add(movingShape);
             pathField.add(movingShape.getSFieldShape());
         }
         
@@ -168,41 +155,28 @@ public class MoveExample extends JFrame{
         
     }
 
-    private static class MovingShape implements GLRenderer {
-        private final GLPoint _glPoint;
-        private final PointFieldShape _fieldShape;
+    private static class MovingShape {
+        private final FieldShape _fieldShape;
         private final Point _end;
         
-        public MovingShape(GLPoint glPoint, Point point, Point end) {
+        public MovingShape(FieldShape fieldShape, Point end) {
             super();
-            _glPoint = glPoint;
-            _fieldShape = new PointFieldShape(point.getX(), point.getY());
+            _fieldShape = fieldShape;
             _end = end;
         }
 
         public void next(PathField pathField) {
             if (!isArrived()) {
-                AStarPathFinder finder = new AStarPathFinder(pathField, new Point(_fieldShape.getX(), _fieldShape.getY()), _end);
+                AStarPathFinder finder = new AStarPathFinder(pathField, _fieldShape.getLocation(), _end);
                 List<Point> path = finder.getPath();
                 if (path != null && !path.isEmpty()) {
-                    _glPoint.setLocation(path.get(path.size() -1));
                     _fieldShape.setLocation(path.get(path.size() -1));
                 }
             }
         }
         
         public boolean isArrived() {
-            return _glPoint.getPoint().equals(_end);
-        }
-        
-        @Override
-        public void render(GL gl) {
-            _glPoint.render(gl);
-//            if (_currentFinder != null) {
-//                if (_currentFinder instanceof GLRenderer) {
-//                    ((GLRenderer)_currentFinder).render(gl);
-//                }
-//            }
+            return _fieldShape.getLocation().equals(_end);
         }
         
         public FieldShape getSFieldShape() {

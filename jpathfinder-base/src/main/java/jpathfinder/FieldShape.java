@@ -2,8 +2,8 @@ package jpathfinder;
 
 public interface FieldShape {
 
-//    Point getLocation();
-//    
+    Point getLocation();
+    
     void setLocation(Point location);
     
     boolean contains(Point point);

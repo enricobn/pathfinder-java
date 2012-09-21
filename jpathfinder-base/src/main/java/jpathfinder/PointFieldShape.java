@@ -46,6 +46,11 @@ public class PointFieldShape implements FieldShape, Cloneable {
         _y = location.getY();
         _moving = true;
     }
+    
+    @Override
+    public Point getLocation() {
+        return new Point(_x, _y);
+    }
 
     @Override
     public int hashCode() {

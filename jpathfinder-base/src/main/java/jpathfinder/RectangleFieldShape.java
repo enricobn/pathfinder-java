@@ -59,6 +59,11 @@ public class RectangleFieldShape implements FieldShape, Cloneable {
     public int getMaxY() {
         return _point.getY() + _height -1;
     }
+    
+    @Override
+    public Point getLocation() {
+        return _point;
+    }
 
     @Override
     public int hashCode() {
