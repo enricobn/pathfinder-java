@@ -2,14 +2,18 @@ package jpathfinder.gl;
 
 import javax.media.opengl.GL;
 
+import jpathfinder.FieldShape;
 import jpathfinder.Point;
 import jpathfinder.Rectangle;
+import jpathfinder.RectangleFieldShape;
 
-public class GLRectangle implements GLRenderer {
-    private Rectangle _recRectangle;
+public class GLRectangle implements GLShape {
+    private final Rectangle _recRectangle;
+    private final RectangleFieldShape _recRectangleFieldShape;
 
     public GLRectangle(Rectangle rectangle) {
         _recRectangle = rectangle;
+        _recRectangleFieldShape = new RectangleFieldShape(rectangle);
     }
     
     public GLRectangle(Point point, int width, int height) {
@@ -38,6 +42,11 @@ public class GLRectangle implements GLRenderer {
 
     public Rectangle getRectangle() {
         return _recRectangle;
+    }
+    
+    @Override
+    public FieldShape getFieldShape() {
+        return _recRectangleFieldShape;
     }
     
     public String toString() {

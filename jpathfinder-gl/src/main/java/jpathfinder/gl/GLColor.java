@@ -29,9 +29,10 @@ import javax.media.opengl.GL;
 public class GLColor {
     public static final GLColor WHITE = new GLColor(Color.WHITE, 0);
     public static final GLColor BLACK = new GLColor(Color.BLACK, 0);
-    public static final GLColor BLUE = new GLColor(0.1f, 0.1f, 0.4f, 0);
+    public static final GLColor BLUE = new GLColor(0f, 0f, 1f, 0);
     public static final GLColor CYAN = new GLColor(0.7f, 0.7f, 1.0f, 0);
     public static final GLColor BROWN = new GLColor(71, 40, 7, 0);
+    public static final GLColor RED = new GLColor(1f, 0f, 0f, 0);
 //    public static final GLColor IVORY = new GLColor(253, 247, 195, 0);
     public static final GLColor IVORY = new GLColor(233, 228, 182, 0);
 

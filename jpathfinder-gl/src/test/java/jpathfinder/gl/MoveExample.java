@@ -32,10 +32,11 @@ public class MoveExample extends JFrame{
     public static void main(String[] args) {
         PathField pathField = new PathField(new Dimension(100, 100));
         
-        pathField.add(new RectangleFieldShape(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF)); 
-        pathField.add(new RectangleFieldShape(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
-        pathField.add(new RectangleFieldShape(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
-        pathField.add(new RectangleFieldShape(new Point(75 * SIZE_COEFF, 75 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
+        GLField glField = new GLField(pathField, new Dimension(100, 100));
+        glField.add(new GLRectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
+        glField.add(new GLRectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
+        glField.add(new GLRectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
+        glField.add(new GLRectangle(new Point(75 * SIZE_COEFF, 75 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
 
         Collection<MovingShape> movingShapes = new ArrayList<MoveExample.MovingShape>();
         
@@ -43,17 +44,17 @@ public class MoveExample extends JFrame{
             Point start = new Point(0, MOVING_SHAPES_COUNT - i);
             Point end = new Point(90 * SIZE_COEFF, 99 * SIZE_COEFF  - i);
             MovingShape movingShape = new MovingShape(
-                    new PointFieldShape(start.getX(), start.getY()),
+                    new GLPoint(GLColor.RED, start.getX(), start.getY()),
                     end);
             movingShapes.add(movingShape);
 
             movingShape = new MovingShape(
-                    new PointFieldShape(end.getX(), end.getY()),
+                    new GLPoint(GLColor.BLUE, end.getX(), end.getY()),
                     start);
             movingShapes.add(movingShape);
         }
         
-        MoveExample frame = new MoveExample(pathField, new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF), movingShapes);
+        MoveExample frame = new MoveExample(glField, new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF), movingShapes);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
@@ -64,16 +65,15 @@ public class MoveExample extends JFrame{
     private Collection<MovingShape> _movingShapes = new ArrayList<MoveExample.MovingShape>();
     private final long startTime = System.currentTimeMillis();
 
-    public MoveExample(PathField pathField, Dimension dimension, Collection<MovingShape> movingShapes){
-        _pathField = pathField;
-        _field = new GLField(pathField, dimension);
+    public MoveExample(GLField field, Dimension dimension, Collection<MovingShape> movingShapes){
+        _field = field;
+        _pathField = field.getPathField();
         _movingShapes = movingShapes;
 
         _renderers.add(_field);
         
         for (MovingShape movingShape : movingShapes) {
-//            _renderers.add(movingShape);
-            pathField.add(movingShape.getSFieldShape());
+            field.add(movingShape.getGlShape());
         }
         
         setSize(600,600);
@@ -156,12 +156,14 @@ public class MoveExample extends JFrame{
     }
 
     private static class MovingShape {
+        private final GLShape _glShape;
         private final FieldShape _fieldShape;
         private final Point _end;
         
-        public MovingShape(FieldShape fieldShape, Point end) {
+        public MovingShape(GLShape glShape, Point end) {
             super();
-            _fieldShape = fieldShape;
+            _glShape = glShape;
+            _fieldShape = glShape.getFieldShape();
             _end = end;
         }
 
@@ -170,7 +172,7 @@ public class MoveExample extends JFrame{
                 AStarPathFinder finder = new AStarPathFinder(pathField, _fieldShape.getLocation(), _end);
                 List<Point> path = finder.getPath();
                 if (path != null && !path.isEmpty()) {
-                    _fieldShape.setLocation(path.get(path.size() -1));
+                    _glShape.setLocation(path.get(path.size() -1));
                 }
             }
         }
@@ -181,6 +183,10 @@ public class MoveExample extends JFrame{
         
         public FieldShape getSFieldShape() {
             return _fieldShape;
+        }
+        
+        public GLShape getGlShape() {
+            return _glShape;
         }
         
     }

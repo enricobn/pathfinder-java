@@ -2,15 +2,19 @@ package jpathfinder.gl;
 
 import javax.media.opengl.GL;
 
+import jpathfinder.FieldShape;
 import jpathfinder.Point;
+import jpathfinder.PointFieldShape;
 
-public class GLPoint implements GLRenderer {
+public class GLPoint implements GLShape {
     private final GLColor _color;
+    private final PointFieldShape _pointFieldShape; 
     private Point _point;
 
     public GLPoint(GLColor color, int x, int y) {
         _color = color;
         _point = new Point(x, y);
+        _pointFieldShape = new PointFieldShape(x, y);
     }
 
     public Point getPoint() {
@@ -23,6 +27,12 @@ public class GLPoint implements GLRenderer {
 
     public void setLocation(Point location) {
         _point.setLocation(location);
+        _pointFieldShape.setLocation(location);
+    }
+    
+    @Override
+    public FieldShape getFieldShape() {
+        return _pointFieldShape;
     }
 
     public String toString() {
