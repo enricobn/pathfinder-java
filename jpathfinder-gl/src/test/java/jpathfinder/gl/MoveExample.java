@@ -1,6 +1,5 @@
 package jpathfinder.gl;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,9 +18,6 @@ import jpathfinder.Dimension;
 import jpathfinder.FieldShape;
 import jpathfinder.PathField;
 import jpathfinder.Point;
-import jpathfinder.PointFieldShape;
-import jpathfinder.Rectangle;
-import jpathfinder.RectangleFieldShape;
 
 import com.sun.opengl.util.Animator;
 
@@ -32,7 +28,7 @@ public class MoveExample extends JFrame{
     public static void main(String[] args) {
         PathField pathField = new PathField(new Dimension(100, 100));
         
-        GLField glField = new GLField(pathField, new Dimension(100, 100));
+        GLField glField = new GLField(pathField, new Dimension(100 * SIZE_COEFF, 100 *SIZE_COEFF));
         glField.add(new GLRectangle(glField, new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
         glField.add(new GLRectangle(glField, new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
         glField.add(new GLRectangle(glField, new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
@@ -41,20 +37,22 @@ public class MoveExample extends JFrame{
         Collection<MovingShape> movingShapes = new ArrayList<MoveExample.MovingShape>();
         
         for (int i = 0; i < MOVING_SHAPES_COUNT ; i++) {
-            Point start = new Point(0, MOVING_SHAPES_COUNT - i);
-            Point end = new Point(90 * SIZE_COEFF, 99 * SIZE_COEFF  - i);
+            Point start = new Point(0 , SIZE_COEFF * (MOVING_SHAPES_COUNT - i));
+            Point end = new Point(90 * SIZE_COEFF, (99 - i) * SIZE_COEFF);
             MovingShape movingShape = new MovingShape(
+                    glField,
                     new GLPoint(glField, GLColor.RED, start.getX(), start.getY()),
                     end);
             movingShapes.add(movingShape);
 
             movingShape = new MovingShape(
+                    glField,
                     new GLPoint(glField, GLColor.BLUE, end.getX(), end.getY()),
                     start);
             movingShapes.add(movingShape);
         }
         
-        MoveExample frame = new MoveExample(glField, new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF), movingShapes);
+        MoveExample frame = new MoveExample(glField, movingShapes);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
@@ -65,7 +63,7 @@ public class MoveExample extends JFrame{
     private Collection<MovingShape> _movingShapes = new ArrayList<MoveExample.MovingShape>();
     private final long startTime = System.currentTimeMillis();
 
-    public MoveExample(GLField field, Dimension dimension, Collection<MovingShape> movingShapes){
+    public MoveExample(GLField field, Collection<MovingShape> movingShapes){
         _field = field;
         _pathField = field.getPathField();
         _movingShapes = movingShapes;
@@ -156,12 +154,14 @@ public class MoveExample extends JFrame{
     }
 
     private static class MovingShape {
+        private final GLField _glField;
         private final GLShape _glShape;
         private final FieldShape _fieldShape;
         private final Point _end;
         
-        public MovingShape(GLShape glShape, Point end) {
+        public MovingShape(GLField glField, GLShape glShape, Point end) {
             super();
+            _glField = glField;
             _glShape = glShape;
             _fieldShape = glShape.getFieldShape();
             _end = end;
@@ -169,20 +169,16 @@ public class MoveExample extends JFrame{
 
         public void next(PathField pathField) {
             if (!isArrived()) {
-                AStarPathFinder finder = new AStarPathFinder(pathField, _fieldShape.getLocation(), _end);
+                AStarPathFinder finder = new AStarPathFinder(pathField, _fieldShape.getLocation(),  _glField.toPathField(_end));
                 List<Point> path = finder.getPath();
                 if (path != null && !path.isEmpty()) {
-                    _glShape.setLocation(path.get(path.size() -1));
+                    _glShape.setLocation(_glField.fromPathField(path.get(path.size() -1)));
                 }
             }
         }
         
         public boolean isArrived() {
-            return _fieldShape.getLocation().equals(_end);
-        }
-        
-        public FieldShape getSFieldShape() {
-            return _fieldShape;
+            return _fieldShape.getLocation().equals(_glField.toPathField(_end));
         }
         
         public GLShape getGlShape() {

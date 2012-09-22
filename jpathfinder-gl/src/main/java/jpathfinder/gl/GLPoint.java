@@ -26,11 +26,12 @@ public class GLPoint implements GLShape {
     
     public void move(int xDiff, int yDiff) {
         _point.move(xDiff, yDiff);
+        _pointFieldShape.move(_field.toPathFieldX(xDiff), _field.toPathFieldY(yDiff));
     }
 
     public void setLocation(Point location) {
         _point.setLocation(location);
-        _pointFieldShape.setLocation(location);
+        _pointFieldShape.setLocation(_field.toPathField(location));
     }
     
     @Override

@@ -33,16 +33,29 @@ public class GLField implements GLRenderer {
     }
     
     public int toPathFieldX(int glX) {
-        return (int) ((float)glX / _dimension.width * _pathField.getSize().width);
+        return Math.round((float)glX / _dimension.width * _pathField.getSize().width);
     }
 
     public int toPathFieldY(int glY) {
-        return (int) ((float)glY / _dimension.height * _pathField.getSize().height);
+        return Math.round((float)glY / _dimension.height * _pathField.getSize().height);
     }
-    
+
+    public int fromPathFieldX(int x) {
+        return Math.round((float)x / _pathField.getSize().width * _dimension.width);
+    }
+
+    public int fromPathFieldY(int y) {
+        return Math.round((float)y / _pathField.getSize().height * _dimension.height);
+    }
+
     public Point toPathField(Point glPoint) {
         return new Point(toPathFieldX(glPoint.getX()), toPathFieldY(glPoint.getY()));
     }
+
+    public Point fromPathField(Point point) {
+        return new Point(fromPathFieldX(point.getX()), fromPathFieldY(point.getY()));
+    }
+
     
     public Dimension getSize() {
         return _dimension;

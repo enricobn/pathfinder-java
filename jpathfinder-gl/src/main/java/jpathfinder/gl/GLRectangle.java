@@ -9,13 +9,13 @@ import jpathfinder.RectangleFieldShape;
 
 public class GLRectangle implements GLShape {
     private final GLField _field;
-    private final Rectangle _recRectangle;
-    private final RectangleFieldShape _recRectangleFieldShape;
+    private final Rectangle _rectangle;
+    private final RectangleFieldShape _rectangleFieldShape;
 
     public GLRectangle(GLField field, Rectangle rectangle) {
         _field = field;
-        _recRectangle = rectangle;
-        _recRectangleFieldShape = new RectangleFieldShape(field.toPathField(rectangle.getPoint()), field.toPathFieldX(rectangle.getWidth()), 
+        _rectangle = rectangle;
+        _rectangleFieldShape = new RectangleFieldShape(field.toPathField(rectangle.getPoint()), field.toPathFieldX(rectangle.getWidth()), 
                 field.toPathFieldY(rectangle.getHeight()));
     }
     
@@ -24,36 +24,38 @@ public class GLRectangle implements GLShape {
     }
 
     public void move(int xDiff, int yDiff) {
-        _recRectangle.move(xDiff, yDiff);
+        _rectangle.move(xDiff, yDiff);
+        _rectangleFieldShape.move(_field.toPathFieldX(xDiff), _field.toPathFieldY(yDiff));
     }
 
     public void setLocation(Point location) {
-        _recRectangle.setLocation(location);
+        _rectangle.setLocation(location);
+        _rectangleFieldShape.setLocation(_field.toPathField(location));
     }
 
     public Point getPoint() {
-        return _recRectangle.getPoint();
+        return _rectangle.getPoint();
     }
 
     public int getMaxX() {
-        return _recRectangle.getMaxX();
+        return _rectangle.getMaxX();
     }
 
     public int getMaxY() {
-        return _recRectangle.getMaxY();
+        return _rectangle.getMaxY();
     }
 
     public Rectangle getRectangle() {
-        return _recRectangle;
+        return _rectangle;
     }
     
     @Override
     public FieldShape getFieldShape() {
-        return _recRectangleFieldShape;
+        return _rectangleFieldShape;
     }
     
     public String toString() {
-        return _recRectangle.toString();
+        return _rectangle.toString();
     }
 
     public void render(GL gl) {
