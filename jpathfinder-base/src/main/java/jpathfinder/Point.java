@@ -21,6 +21,14 @@ public class Point implements Cloneable {
     public int distance(Point point) {
         return (int) Math.sqrt((_x - point._x) ^ 2 + (_y - point._y) ^ 2);  
     }
+
+    public double angle(Point point) {
+        int dx = point._x - _x;
+        int dy = point._y - _y;
+        // - since 0,0 is up left
+        return -Math.atan2(dy, dx);
+    }
+
     
     public void move(int xDiff, int yDiff) {
         _x += xDiff;

@@ -22,7 +22,7 @@ import jpathfinder.Point;
 import com.sun.opengl.util.Animator;
 
 public class MoveExample extends JFrame{
-    private static final int SIZE_COEFF = 1;
+    private static final int SIZE_COEFF = 5;
     private static final int MOVING_SHAPES_COUNT = 50;
         
     public static void main(String[] args) {
@@ -41,13 +41,13 @@ public class MoveExample extends JFrame{
             Point end = new Point(90 * SIZE_COEFF, (99 - i) * SIZE_COEFF);
             MovingShape movingShape = new MovingShape(
                     glField,
-                    new GLPoint(glField, GLColor.RED, start.getX(), start.getY()),
+                    new GLArrow(glField, GLColor.RED, start.getX(), start.getY(), 5, start.angle(end)),
                     end);
             movingShapes.add(movingShape);
 
             movingShape = new MovingShape(
                     glField,
-                    new GLPoint(glField, GLColor.BLUE, end.getX(), end.getY()),
+                    new GLArrow(glField, GLColor.BLUE, end.getX(), end.getY(), 5, end.angle(start)),
                     start);
             movingShapes.add(movingShape);
         }
@@ -116,6 +116,11 @@ public class MoveExample extends JFrame{
             gl.glMatrixMode(GL.GL_MODELVIEW);
             gl.glPushMatrix();
                 gl.glLoadIdentity();
+
+//                for (int i = 0; i < 8; i++) {
+//                    new GLArrow(_field, GLColor.RED, 100, 100, 10, Math.PI / 3 * i).render(gl);
+//                }
+                
                 synchronized (_renderers) {
                     for (GLRenderer renderer : _renderers) {
                         renderer.render(gl);
