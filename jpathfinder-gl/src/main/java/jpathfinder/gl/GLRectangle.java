@@ -9,18 +9,20 @@ import jpathfinder.RectangleFieldShape;
 
 public class GLRectangle implements GLShape {
     private final GLField _field;
+    private final GLColor _color;
     private final Rectangle _rectangle;
     private final RectangleFieldShape _rectangleFieldShape;
 
-    public GLRectangle(GLField field, Rectangle rectangle) {
+    public GLRectangle(GLField field, GLColor color, Rectangle rectangle) {
         _field = field;
+        _color = color;
         _rectangle = rectangle;
         _rectangleFieldShape = new RectangleFieldShape(field.toPathField(rectangle.getPoint()), field.toPathFieldX(rectangle.getWidth()), 
                 field.toPathFieldY(rectangle.getHeight()));
     }
     
-    public GLRectangle(GLField field, Point point, int width, int height) {
-        this(field, new Rectangle(point, width, height));
+    public GLRectangle(GLField field, GLColor color, Point point, int width, int height) {
+        this(field, color, new Rectangle(point, width, height));
     }
 
     public void move(int xDiff, int yDiff) {
@@ -59,7 +61,11 @@ public class GLRectangle implements GLShape {
     }
 
     public void render(GL gl) {
-        gl.glRectf((float)getPoint().getX(), (float)getPoint().getY(), (float)getMaxX() + 1, 
-                (float)getMaxY() + 1);
+        gl.glPushAttrib(GL.GL_ALL_ATTRIB_BITS);
+            gl.glEnable(GL.GL_COLOR_MATERIAL);
+            _color.render(gl);
+            gl.glRectf((float)getPoint().getX(), (float)getPoint().getY(), (float)getMaxX() + 1, 
+                    (float)getMaxY() + 1);
+        gl.glPopAttrib();
     }
 }

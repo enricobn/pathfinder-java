@@ -19,7 +19,7 @@ public class GLArrow implements GLShape {
         _field = field;
         _color = color;
         _pointFieldShape = new PointFieldShape(field.toPathFieldX(x), field.toPathFieldY(y));
-        _size = size;
+        _size = (float) (size / Math.cos(BASE_ANGLE));
         _point = new Point(x, y);
         _angle = angle;
     }
@@ -70,9 +70,8 @@ public class GLArrow implements GLShape {
     }
     
     private void glVertex2(GL gl, Point point, int sign) {
-        double distance = _size;
-        gl.glVertex2d((float)point.getX() + distance * Math.cos(Math.PI - (_angle + sign * BASE_ANGLE)), 
-                (float)point.getY() + distance * Math.sin(Math.PI - (_angle + sign * BASE_ANGLE)));
+        gl.glVertex2d((float)point.getX() + _size * Math.cos(Math.PI - (_angle + sign * BASE_ANGLE)), 
+                (float)point.getY() + _size * Math.sin(Math.PI - (_angle + sign * BASE_ANGLE)));
     }
 
 }

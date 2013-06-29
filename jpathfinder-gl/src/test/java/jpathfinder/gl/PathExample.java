@@ -41,23 +41,23 @@ public class PathExample extends JFrame{
         
         Rectangle rect = new Rectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
         
-        GLRectangle glrect = new GLRectangle(glfield, rect); 
+        GLRectangle glrect = new GLRectangle(glfield, GLColor.WHITE, rect); 
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
         
         rect = new Rectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
-        glrect = new GLRectangle(glfield, rect);
+        glrect = new GLRectangle(glfield, GLColor.WHITE, rect);
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
         
         
         rect = new Rectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
-        glrect = new GLRectangle(glfield, rect);
+        glrect = new GLRectangle(glfield, GLColor.WHITE, rect);
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
         
         rect = new Rectangle(new Point(80 * SIZE_COEFF, 80 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
-        glrect = new GLRectangle(glfield, rect);
+        glrect = new GLRectangle(glfield, GLColor.WHITE, rect);
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
 

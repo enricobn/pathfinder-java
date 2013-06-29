@@ -18,6 +18,7 @@ import jpathfinder.Dimension;
 import jpathfinder.FieldShape;
 import jpathfinder.PathField;
 import jpathfinder.Point;
+import jpathfinder.Rectangle;
 
 import com.sun.opengl.util.Animator;
 
@@ -29,10 +30,10 @@ public class MoveExample extends JFrame{
         PathField pathField = new PathField(new Dimension(100, 100));
         
         GLField glField = new GLField(pathField, new Dimension(100 * SIZE_COEFF, 100 *SIZE_COEFF));
-        glField.add(new GLRectangle(glField, new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
-        glField.add(new GLRectangle(glField, new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
-        glField.add(new GLRectangle(glField, new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
-        glField.add(new GLRectangle(glField, new Point(75 * SIZE_COEFF, 75 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
+        glField.add(new GLRectangle(glField, GLColor.WHITE, new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
+        glField.add(new GLRectangle(glField, GLColor.WHITE, new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
+        glField.add(new GLRectangle(glField, GLColor.WHITE, new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
+        glField.add(new GLRectangle(glField, GLColor.WHITE, new Point(75 * SIZE_COEFF, 75 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
 
         Collection<MovingShape> movingShapes = new ArrayList<MoveExample.MovingShape>();
         
@@ -41,13 +42,15 @@ public class MoveExample extends JFrame{
             Point end = new Point(90 * SIZE_COEFF, (99 - i) * SIZE_COEFF);
             MovingShape movingShape = new MovingShape(
                     glField,
-                    new GLArrow(glField, GLColor.RED, start.getX(), start.getY(), 5, start.angle(end)),
+                    new GLRectangle(glField, GLColor.BLUE, new Rectangle(start, 5, 5)),
+//                    new GLArrow(glField, GLColor.RED, start.getX(), start.getY(), 5, start.angle(end)),
                     end);
             movingShapes.add(movingShape);
 
             movingShape = new MovingShape(
                     glField,
-                    new GLArrow(glField, GLColor.BLUE, end.getX(), end.getY(), 5, end.angle(start)),
+//                    new GLArrow(glField, GLColor.BLUE, end.getX(), end.getY(), 5, end.angle(start)),
+                    new GLRectangle(glField, GLColor.RED, new Rectangle(end, 5, 5)),
                     start);
             movingShapes.add(movingShape);
         }
@@ -116,11 +119,6 @@ public class MoveExample extends JFrame{
             gl.glMatrixMode(GL.GL_MODELVIEW);
             gl.glPushMatrix();
                 gl.glLoadIdentity();
-
-//                for (int i = 0; i < 8; i++) {
-//                    new GLArrow(_field, GLColor.RED, 100, 100, 10, Math.PI / 3 * i).render(gl);
-//                }
-                
                 synchronized (_renderers) {
                     for (GLRenderer renderer : _renderers) {
                         renderer.render(gl);
