@@ -25,7 +25,7 @@ import com.sun.opengl.util.Animator;
 /*
  * 
  * 28 Jul 2013 
- * millis: 7072
+ * millis: 5868
  */
 public class MoveExample extends JFrame{
     private static final int SIZE_COEFF = 5;
