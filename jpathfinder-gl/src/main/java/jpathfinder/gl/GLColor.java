@@ -21,6 +21,7 @@ package jpathfinder.gl;
 import java.awt.Color;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 /**
  * @author Enrico Benedetti
@@ -70,7 +71,7 @@ public class GLColor {
         this(red, green, blue, 255);
     }
 
-    public void render(final GL gl) {
+    public void render(final GL2 gl) {
         gl.glColor4f(red, green, blue, alpha);
     }
     

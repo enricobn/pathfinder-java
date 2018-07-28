@@ -3,7 +3,7 @@ package jpathfinder.gl;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 import jpathfinder.Dimension;
 import jpathfinder.PathField;
@@ -26,7 +26,7 @@ public class GLField implements GLRenderer {
     }
 
     @Override
-    public void render(GL gl) {
+    public void render(GL2 gl) {
         for (GLShape shape : _shapes) {
             shape.render(gl);
         }

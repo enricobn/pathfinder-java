@@ -1,7 +1,7 @@
 package jpathfinder.gl;
 
 import javax.media.opengl.GL;
-import javax.swing.text.GlyphView.GlyphPainter;
+import javax.media.opengl.GL2;
 
 import jpathfinder.FieldShape;
 import jpathfinder.Point;
@@ -44,9 +44,9 @@ public class GLPoint implements GLShape {
     }
     
     @Override
-    public void render(GL gl) {
-        gl.glPushAttrib(GL.GL_ALL_ATTRIB_BITS);
-        gl.glEnable(GL.GL_COLOR_MATERIAL);
+    public void render(GL2 gl) {
+        gl.glPushAttrib(GL2.GL_ALL_ATTRIB_BITS);
+        gl.glEnable(GL2.GL_COLOR_MATERIAL);
         _color.render(gl);
         gl.glRectf(_point.getX(), _point.getY(), _point.getX() + 1, _point.getY() + 1);
         gl.glPopAttrib();

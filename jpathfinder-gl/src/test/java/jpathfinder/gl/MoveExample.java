@@ -5,22 +5,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javax.media.opengl.DebugGL;
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
-import javax.swing.JFrame;
+import javax.media.opengl.*;
+import javax.media.opengl.awt.GLCanvas;
+import javax.swing.*;
 
+import com.jogamp.opengl.util.Animator;
 import jpathfinder.AStarPathFinder;
 import jpathfinder.Dimension;
 import jpathfinder.FieldShape;
 import jpathfinder.PathField;
 import jpathfinder.Point;
 import jpathfinder.Rectangle;
-
-import com.sun.opengl.util.Animator;
 
 /*
  * 
@@ -61,7 +56,7 @@ public class MoveExample extends JFrame{
         }
         
         MoveExample frame = new MoveExample(glField, movingShapes);
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
     
@@ -86,7 +81,8 @@ public class MoveExample extends JFrame{
         setTitle("Hello Universe");
         
         GraphicsListener listener=new GraphicsListener();
-        GLCapabilities glCapabilities = new GLCapabilities();
+        GLProfile glp = GLProfile.getDefault();
+        GLCapabilities glCapabilities = new GLCapabilities(glp);
         /*
          * the default is 0 !!!!
          * I have lost a night ...   
@@ -98,7 +94,7 @@ public class MoveExample extends JFrame{
         getContentPane().add(canvas);
         
         //Create an Animator linked to the Canvas
-        Animator animator = new Animator(canvas); //new FPSAnimator(canvas, 10);  
+        Animator animator = new Animator(canvas); //new FPSAnimator(canvas, 10);
         animator.start();
     }
     
@@ -115,13 +111,13 @@ public class MoveExample extends JFrame{
                 System.exit(0);
             }
             
-            GL gl=arg0.getGL();
+            GL2 gl=arg0.getGL().getGL2();
 
             // clear
             gl.glClearStencil(0x0);
             gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
 
-            gl.glMatrixMode(GL.GL_MODELVIEW);
+            gl.glMatrixMode(GL2.GL_MODELVIEW);
             gl.glPushMatrix();
                 gl.glLoadIdentity();
                 synchronized (_renderers) {
@@ -138,22 +134,29 @@ public class MoveExample extends JFrame{
         /* init method
          * */
         public void init(GLAutoDrawable arg0) {
-            arg0.setGL(new DebugGL(arg0.getGL()));
+            // TODO
+            //arg0.setGL(new DebugGL(arg0.getGL()));
             
-            GL gl = arg0.getGL();
+            GL2 gl = arg0.getGL().getGL2();
             
-            gl.glEnable(GL.GL_LIGHT0);
-            gl.glEnable(GL.GL_LIGHTING);
+            gl.glEnable(GL2.GL_LIGHT0);
+            gl.glEnable(GL2.GL_LIGHTING);
 
             // I don't need it in this example
             gl.glDisable(GL.GL_DEPTH_TEST);
             
             gl.glStencilMask(~0);
             
-            gl.glMatrixMode(GL.GL_PROJECTION);
+            gl.glMatrixMode(GL2.GL_PROJECTION);
             gl.glLoadIdentity();
             
             gl.glOrtho (0, _field.getSize().width, _field.getSize().height, 0, 0, 1);
+        }
+
+        @Override
+        public void dispose(GLAutoDrawable glAutoDrawable) {
+            // TODO
+            System.out.println("dispose");
         }
 
         public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {

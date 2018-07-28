@@ -1,6 +1,7 @@
 package jpathfinder.gl;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 import jpathfinder.FieldShape;
 import jpathfinder.Point;
@@ -49,9 +50,9 @@ public class GLArrow implements GLShape {
     }
     
     @Override
-    public void render(GL gl) {
-        gl.glPushAttrib(GL.GL_ALL_ATTRIB_BITS);
-        gl.glEnable(GL.GL_COLOR_MATERIAL);
+    public void render(GL2 gl) {
+        gl.glPushAttrib(GL2.GL_ALL_ATTRIB_BITS);
+        gl.glEnable(GL2.GL_COLOR_MATERIAL);
         _color.render(gl);
 
 //        try {
@@ -69,7 +70,7 @@ public class GLArrow implements GLShape {
         gl.glPopAttrib();
     }
     
-    private void glVertex2(GL gl, Point point, int sign) {
+    private void glVertex2(GL2 gl, Point point, int sign) {
         gl.glVertex2d((float)point.getX() + _size * Math.cos(Math.PI - (_angle + sign * BASE_ANGLE)), 
                 (float)point.getY() + _size * Math.sin(Math.PI - (_angle + sign * BASE_ANGLE)));
     }

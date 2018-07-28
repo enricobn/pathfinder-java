@@ -5,22 +5,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-import javax.media.opengl.DebugGL;
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
+import javax.media.opengl.*;
+import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
 
+import com.jogamp.opengl.util.Animator;
 import jpathfinder.Dimension;
 import jpathfinder.PathField;
 import jpathfinder.Point;
 import jpathfinder.PointFieldShape;
 import jpathfinder.Rectangle;
 import jpathfinder.RectangleFieldShape;
-
-import com.sun.opengl.util.Animator;
 
 public class PathExample extends JFrame{
 //    private static final int STENCIL_MASK = 0x1;
@@ -91,7 +86,7 @@ public class PathExample extends JFrame{
         _me = new GLPoint(glField, new GLColor(Color.RED), start.getX(), start.getY());
         
         // TODO ugly
-        _renderers.add((GLRenderer)_me);
+        _renderers.add(_me);
 
         _renderers.add(new GLPoint(glField, new GLColor(Color.GREEN), end.getX(), end.getY()));
         _renderers.add(new GLPoint(glField, new GLColor(Color.RED), start.getX(), start.getY()));
@@ -104,7 +99,8 @@ public class PathExample extends JFrame{
         setTitle("Hello Universe");
         
         GraphicsListener listener=new GraphicsListener();
-        GLCapabilities glCapabilities = new GLCapabilities();
+        GLProfile glp = GLProfile.getDefault();
+        GLCapabilities glCapabilities = new GLCapabilities(glp);
         /*
          * the default is 0 !!!!
          * I have lost a night ...   
@@ -141,13 +137,13 @@ public class PathExample extends JFrame{
 
         public void display(GLAutoDrawable arg0) {
             
-            GL gl=arg0.getGL();
+            GL2 gl=arg0.getGL().getGL2();
 
             // clear
             gl.glClearStencil(0x0);
             gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_STENCIL_BUFFER_BIT);
 
-            gl.glMatrixMode(GL.GL_MODELVIEW);
+            gl.glMatrixMode(GL2.GL_MODELVIEW);
             gl.glPushMatrix();
                 gl.glLoadIdentity();
                 synchronized (_renderers) {
@@ -164,25 +160,31 @@ public class PathExample extends JFrame{
         /* init method
          * */
         public void init(GLAutoDrawable arg0) {
-            arg0.setGL(new DebugGL(arg0.getGL()));
+            // TODO
+            //arg0.setGL(new DebugGL(arg0.getGL()));
             
-            GL gl = arg0.getGL();
+            GL2 gl = arg0.getGL().getGL2();
             
-            gl.glEnable(GL.GL_LIGHT0);
-            gl.glEnable(GL.GL_LIGHTING);
+            gl.glEnable(GL2.GL_LIGHT0);
+            gl.glEnable(GL2.GL_LIGHTING);
 
             // I don't need it in this example
             gl.glDisable(GL.GL_DEPTH_TEST);
             
             gl.glStencilMask(~0);
             
-            gl.glMatrixMode(GL.GL_PROJECTION);
+            gl.glMatrixMode(GL2.GL_PROJECTION);
             gl.glLoadIdentity();
             
             gl.glOrtho (0, _field.getSize().width, _field.getSize().height, 0, 0, 1);
         }
 
         public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
+        }
+
+        @Override
+        public void dispose(GLAutoDrawable arg0) {
+            // TODO
         }
         
     }
@@ -197,7 +199,7 @@ public class PathExample extends JFrame{
         }
 
         @Override
-        public void render(GL gl) {
+        public void render(GL2 gl) {
             GLPoint shape  = new GLPoint(_glField, new GLColor(Color.GREEN), 0, 0);
             for (Point point : _path) {
                 shape.setLocation(point);

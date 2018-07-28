@@ -1,6 +1,7 @@
 package jpathfinder.gl;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
 
 import jpathfinder.FieldShape;
 import jpathfinder.Point;
@@ -60,9 +61,9 @@ public class GLRectangle implements GLShape {
         return _rectangle.toString();
     }
 
-    public void render(GL gl) {
-        gl.glPushAttrib(GL.GL_ALL_ATTRIB_BITS);
-            gl.glEnable(GL.GL_COLOR_MATERIAL);
+    public void render(GL2 gl) {
+        gl.glPushAttrib(GL2.GL_ALL_ATTRIB_BITS);
+            gl.glEnable(GL2.GL_COLOR_MATERIAL);
             _color.render(gl);
             gl.glRectf((float)getPoint().getX(), (float)getPoint().getY(), (float)getMaxX() + 1, 
                     (float)getMaxY() + 1);
