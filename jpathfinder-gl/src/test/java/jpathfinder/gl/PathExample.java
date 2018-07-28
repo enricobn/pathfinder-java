@@ -121,7 +121,7 @@ public class PathExample extends JFrame{
             public void run() {
                 Collection<Point> path = finder.getPath();
                 if (path != null) {
-                    _renderers.add(new PathRenderer(finder.getPath()));
+                    _renderers.add(new PathRenderer(path));
                 }
                 System.out.println(System.currentTimeMillis() - startTime);
             }
@@ -184,7 +184,6 @@ public class PathExample extends JFrame{
 
         @Override
         public void dispose(GLAutoDrawable arg0) {
-            // TODO
         }
         
     }

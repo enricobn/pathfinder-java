@@ -155,8 +155,6 @@ public class MoveExample extends JFrame{
 
         @Override
         public void dispose(GLAutoDrawable glAutoDrawable) {
-            // TODO
-            System.out.println("dispose");
         }
 
         public void reshape(GLAutoDrawable arg0, int arg1, int arg2, int arg3, int arg4) {
