@@ -34,24 +34,22 @@ public class PathExample extends JFrame{
         
         GLField glfield = new GLField(pathField, new Dimension(100 * SIZE_COEFF, 100 * SIZE_COEFF));
         
-        Rectangle rect = new Rectangle(new Point(10 * SIZE_COEFF, 10 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
-        
+        Rectangle rect = rectangle(10, 10 , 10 , 10);
         GLRectangle glrect = new GLRectangle(glfield, GLColor.WHITE, rect); 
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
         
-        rect = new Rectangle(new Point(40 * SIZE_COEFF, 20 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
+        rect = rectangle(40, 20, 20, 20);
         glrect = new GLRectangle(glfield, GLColor.WHITE, rect);
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
         
-        
-        rect = new Rectangle(new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF);
+        rect = rectangle(40, 60, 20, 20);
         glrect = new GLRectangle(glfield, GLColor.WHITE, rect);
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
         
-        rect = new Rectangle(new Point(80 * SIZE_COEFF, 80 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF);
+        rect = rectangle(80, 80, 10, 10);
         glrect = new GLRectangle(glfield, GLColor.WHITE, rect);
         renderers.add(glrect);
         pathField.add(new RectangleFieldShape(rect));
@@ -72,6 +70,10 @@ public class PathExample extends JFrame{
         PathExample frame = new PathExample(glfield, startPoint, endPoint, renderers);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
+    }
+
+    private static Rectangle rectangle(int x, int y, int width, int height) {
+        return new Rectangle(new Point(x * SIZE_COEFF, y * SIZE_COEFF), width * SIZE_COEFF, height * SIZE_COEFF);
     }
     
     private final Collection<GLRenderer> _renderers = Collections.synchronizedList(new ArrayList<GLRenderer>());
