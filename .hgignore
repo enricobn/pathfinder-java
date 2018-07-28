@@ -4,3 +4,4 @@ syntax: glob
 jpathfinder-gl/bin
 jpathfinder-base/bin
 jpathfinder-gl/native
+.idea
