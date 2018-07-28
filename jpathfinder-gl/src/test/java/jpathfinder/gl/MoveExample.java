@@ -99,16 +99,19 @@ public class MoveExample extends JFrame{
     }
     
     public class GraphicsListener implements GLEventListener{
+        private boolean ended = false;
 
         public void display(GLAutoDrawable arg0) {
-            boolean exit = true; 
-            for (MovingShape movingShape : _movingShapes) {
-                movingShape.next(_pathField);
-                exit &= movingShape.isArrived();
-            }
-            if (exit) {
-                System.out.println("millis: " + (System.currentTimeMillis() - startTime));
-                System.exit(0);
+            if (!ended) {
+                boolean exit = true;
+                for (MovingShape movingShape : _movingShapes) {
+                    movingShape.next(_pathField);
+                    exit &= movingShape.isArrived();
+                }
+                if (exit) {
+                    ended = true;
+                    System.out.println("millis: " + (System.currentTimeMillis() - startTime));
+                }
             }
             
             GL2 gl=arg0.getGL().getGL2();
