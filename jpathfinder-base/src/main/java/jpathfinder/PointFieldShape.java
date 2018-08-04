@@ -3,8 +3,7 @@ package jpathfinder;
 public class PointFieldShape implements FieldShape, Cloneable {
     private int _x;
     private int _y;
-    private boolean _moving = false;
-    
+
     public PointFieldShape(int x, int y) {
         super();
         this._x = x;
@@ -27,24 +26,17 @@ public class PointFieldShape implements FieldShape, Cloneable {
     public int distance(Point point) {
         return (int) Math.sqrt((_x - point.getX()) ^ 2 + (_y - point.getY()) ^ 2);  
     }
-    
-    @Override
-    public boolean isMoving() {
-        return _moving;
-    }
-    
+
     @Override
     public void move(int xDiff, int yDiff) {
         _x += xDiff;
         _y += yDiff;
-        _moving = true;
     }
     
     @Override
     public void setLocation(Point location) {
         _x = location.getX();
         _y = location.getY();
-        _moving = true;
     }
     
     @Override

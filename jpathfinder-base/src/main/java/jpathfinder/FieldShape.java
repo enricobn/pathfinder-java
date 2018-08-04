@@ -10,6 +10,4 @@ public interface FieldShape {
     
     void move(int xDiff, int yDiff);
     
-    boolean isMoving();
-        
 }

@@ -20,7 +20,7 @@ import jpathfinder.Rectangle;
 /*
  * 
  * Intel(R) Core(TM) i7 CPU       M 620  @ 2.67GHz
- * millis: 6306
+ * millis: 5370
  *
  */
 public class MoveExample extends JFrame{

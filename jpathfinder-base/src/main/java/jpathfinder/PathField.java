@@ -27,7 +27,7 @@ public class PathField {
         boolean near = from == null || point.distance(from) < 3;
         for (FieldShape fieldShape : _fieldShapes) {
             if (fieldShape.contains(point)) {
-                if (!fieldShape.isMoving() || near) {
+                if (near) {
                     return true;
                 }
             }

@@ -4,7 +4,6 @@ public class RectangleFieldShape implements FieldShape, Cloneable {
     private Point _point;
     private int _width;
     private int _height;
-    private boolean _moving = false;
 
     public RectangleFieldShape(Rectangle rectangle) {
         this(rectangle.getPoint(), rectangle.getWidth(), rectangle.getHeight());
@@ -24,20 +23,13 @@ public class RectangleFieldShape implements FieldShape, Cloneable {
     }
     
     @Override
-    public boolean isMoving() {
-        return _moving;
-    }
-    
-    @Override
     public void move(int xDiff, int yDiff) {
         _point.move(xDiff, yDiff);
-        _moving = true;
     }
     
     @Override
     public void setLocation(Point location) {
         _point = location;
-        _moving = true;
     }
     
     public Point getPoint() {
