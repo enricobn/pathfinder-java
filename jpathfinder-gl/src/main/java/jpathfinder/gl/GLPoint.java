@@ -1,11 +1,10 @@
 package jpathfinder.gl;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-
 import jpathfinder.FieldShape;
 import jpathfinder.Point;
 import jpathfinder.PointFieldShape;
+
+import javax.media.opengl.GL2;
 
 public class GLPoint implements GLShape {
     private final GLField _field;

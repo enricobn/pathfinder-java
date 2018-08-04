@@ -19,8 +19,9 @@ import jpathfinder.Rectangle;
 
 /*
  * 
- * 28 Jul 2013 
- * millis: 5868
+ * Intel(R) Core(TM) i7 CPU       M 620  @ 2.67GHz
+ * millis: 6306
+ *
  */
 public class MoveExample extends JFrame{
     private static final int SIZE_COEFF = 5;

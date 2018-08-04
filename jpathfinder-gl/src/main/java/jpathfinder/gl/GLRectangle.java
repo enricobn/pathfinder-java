@@ -1,12 +1,11 @@
 package jpathfinder.gl;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GL2;
-
 import jpathfinder.FieldShape;
 import jpathfinder.Point;
 import jpathfinder.Rectangle;
 import jpathfinder.RectangleFieldShape;
+
+import javax.media.opengl.GL2;
 
 public class GLRectangle implements GLShape {
     private final GLField _field;
