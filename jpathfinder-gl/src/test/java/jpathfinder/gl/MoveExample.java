@@ -1,14 +1,5 @@
 package jpathfinder.gl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import javax.media.opengl.*;
-import javax.media.opengl.awt.GLCanvas;
-import javax.swing.*;
-
 import com.jogamp.opengl.util.Animator;
 import jpathfinder.AStarPathFinder;
 import jpathfinder.Dimension;
@@ -16,6 +7,19 @@ import jpathfinder.FieldShape;
 import jpathfinder.PathField;
 import jpathfinder.Point;
 import jpathfinder.Rectangle;
+
+import javax.media.opengl.GL;
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /*
  * 
@@ -36,7 +40,7 @@ public class MoveExample extends JFrame{
         glField.add(new GLRectangle(glField, GLColor.WHITE, new Point(40 * SIZE_COEFF, 60 * SIZE_COEFF), 20 * SIZE_COEFF, 20 * SIZE_COEFF));
         glField.add(new GLRectangle(glField, GLColor.WHITE, new Point(75 * SIZE_COEFF, 75 * SIZE_COEFF), 10 * SIZE_COEFF, 10 * SIZE_COEFF));
 
-        Collection<MovingShape> movingShapes = new ArrayList<MoveExample.MovingShape>();
+        Collection<MovingShape> movingShapes = new ArrayList<>();
         
         for (int i = 0; i < MOVING_SHAPES_COUNT ; i++) {
             Point start = new Point(0 , SIZE_COEFF * (MOVING_SHAPES_COUNT - i));
@@ -63,8 +67,8 @@ public class MoveExample extends JFrame{
     
     private final PathField _pathField;
     private final GLField _field;
-    private final List<GLRenderer> _renderers = Collections.synchronizedList(new ArrayList<GLRenderer>());
-    private Collection<MovingShape> _movingShapes = new ArrayList<MoveExample.MovingShape>();
+    private final List<GLRenderer> _renderers = Collections.synchronizedList(new ArrayList<>());
+    private Collection<MovingShape> _movingShapes;
     private final long startTime = System.currentTimeMillis();
 
     public MoveExample(GLField field, Collection<MovingShape> movingShapes){
@@ -185,7 +189,8 @@ public class MoveExample extends JFrame{
                 AStarPathFinder finder = new AStarPathFinder(pathField, _fieldShape.getLocation(),  _glField.toPathField(_end));
                 List<Point> path = finder.getPath();
                 if (path != null && !path.isEmpty()) {
-                    _glShape.setLocation(_glField.fromPathField(path.get(path.size() -1)));
+                    Point next = path.get(path.size() - 1);
+                    _glShape.setLocation(_glField.fromPathField(next));
                 }
             }
         }

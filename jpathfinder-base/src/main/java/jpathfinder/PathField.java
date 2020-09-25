@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class PathField {
-    private final Collection<FieldShape> _fieldShapes = new ArrayList<FieldShape>();
+    private final Collection<FieldShape> _fieldShapes = new ArrayList<>();
     private final Dimension _size;
     private final Rectangle _rectangle;
     
@@ -23,13 +23,10 @@ public class PathField {
         throw new UnsupportedOperationException();
     }
     
-    public boolean isOccupied(Point point, Point from) {
-        boolean near = from == null || point.distance(from) < 3;
+    public boolean isOccupied(Point point) {
         for (FieldShape fieldShape : _fieldShapes) {
             if (fieldShape.contains(point)) {
-                if (near) {
-                    return true;
-                }
+                return true;
             }
         }
         return false;
@@ -47,5 +44,4 @@ public class PathField {
         return _fieldShapes;
     }
 
-    
 }

@@ -1,8 +1,9 @@
 package jpathfinder;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class PathFieldTest {
 
@@ -20,8 +21,8 @@ public class PathFieldTest {
         pathField.add(new RectangleFieldShape(new Point(0, 0), 10, 10));
         pathField.add(new RectangleFieldShape(new Point(20, 20), 10, 10));
         
-        assertTrue(pathField.isOccupied(new Point(5, 5), null));
-        assertFalse(pathField.isOccupied(new Point(15, 15), null));
+        assertTrue(pathField.isOccupied(new Point(5, 5)));
+        assertFalse(pathField.isOccupied(new Point(15, 15)));
      
     }
 

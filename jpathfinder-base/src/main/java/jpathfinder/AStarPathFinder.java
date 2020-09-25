@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * thanks to http://www.policyalmanac.org/games/aStarTutorial.htm
@@ -13,11 +14,9 @@ import java.util.Map;
  *
  */
 public class AStarPathFinder implements PathFinder {
-    private final Map<Point, Node> _open = java.util.Collections.synchronizedMap(new HashMap<Point,Node>());
+    private final Map<Point, Node> _open = java.util.Collections.synchronizedMap(new HashMap<>());
 
-//    private final PriorityBuffer _open = new PriorityBuffer(new NodeComparator());
-    
-    private final Map<Point, Node> _closed = new HashMap<Point, Node>();
+    private final Map<Point, Node> _closed = new HashMap<>();
 
     private final PathField _field;
     private final Point _from;
@@ -30,16 +29,6 @@ public class AStarPathFinder implements PathFinder {
         this._to = to;
     }
 
-//    private static final PrintStream out;
-//    
-//    static {
-//        try {
-//            out = new PrintStream(new File("out.txt"));
-//        } catch (FileNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-    
     public PathField getPathField() {
         return _field;
     }
@@ -53,82 +42,56 @@ public class AStarPathFinder implements PathFinder {
         _open.clear();
         _closed.clear();
         _open.put(_from, new Node(null, _from));
-        Node targetNode = null;
+        Node targetNode;
         while (true) {
-//            out.print(_open.size() + " ");
-            
+
             if (_open.isEmpty()) {
                 return null;
             }
-//            try {
-//                Thread.sleep(50);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-                int min = Integer.MAX_VALUE;
-                Node minNode = null;
-            
-                synchronized (_open) {
-//                    Node orderderMinNode = _open.iterator().next();
-                    for (Node node : _open.values()) {
-                        int f = node.F();
-                        if (minNode == null || f < min) {
-                            min = f;
-                            minNode = node;
-                        }
+
+            int min = Integer.MAX_VALUE;
+            Node minNode = null;
+
+            synchronized (_open) {
+                for (Node node : _open.values()) {
+                    int f = node.F();
+                    if (minNode == null || f < min) {
+                        min = f;
+                        minNode = node;
                     }
                 }
+            }
 
-//                  synchronized (_open) {
-//                      for (Object o : _open) {
-//                          System.out.println("point=" + o);
-//                      }
-//                  }
-            
-//                Node minNode = (Node) _open.remove();
+            if (minNode.point.equals(_to)) {
+                targetNode = minNode;
+                break;
+            }
 
-//                out.println(minNode);
-                
-                if (minNode.point.equals(_to)) {
-                    targetNode = minNode;
-                    break;
-                }
-
-                for (Point point : PathUtils.getAdjacents(minNode.point)) {
-                    // I do not consider the end point to be occupied, so I can move towards it
-                    if (_field.contains(point) && (point.equals(_to) || !_field.isOccupied(point, _from))) {
-                        if (!_closed.containsKey(point)) {
-                            Node node = new Node(minNode, point);
-                            Node got = _open.get(point);
-                            if (got == null) {
-                                _open.put(point, node);
-                            } else {
-                                int gToMin = minNode.G(got);
-                                if (gToMin < node.G()) {
-                                    got.setParent(minNode);
-                                }
+            for (Point point : PathUtils.getAdjacents(minNode.point)) {
+                // I do not consider the end point to be occupied, so I can move towards it
+                if (_field.contains(point) && (point.equals(_to) || !_field.isOccupied(point))) {
+                    if (!_closed.containsKey(point)) {
+                        Node node = new Node(minNode, point);
+                        Node got = _open.get(point);
+                        if (got == null) {
+                            _open.put(point, node);
+                        } else {
+                            int gToMin = minNode.G(got);
+                            if (gToMin < node.G()) {
+                                got.setParent(minNode);
                             }
                         }
                     }
                 }
-                
-                _closed.put(minNode.point, minNode);
-                
-                _open.remove(minNode.point);
-                
-//                System.out.println(_open.size());
-        }
-
-        List<Point> result = new ArrayList<Point>();
-
-        while (targetNode._parent != null) {
-            // the path can contains occupied points. Normally it can be only the end point 
-            if (!_field.isOccupied(targetNode.point, null)) {
-                result.add(targetNode.point);
             }
-            targetNode = targetNode._parent;
+
+            _closed.put(minNode.point, minNode);
+
+            _open.remove(minNode.point);
         }
-        return result;
+
+        // the path can contains occupied points. Normally it can be only the end point
+        return targetNode.getPath().stream().filter(it -> !_field.isOccupied(it)).collect(Collectors.toList());
     }
 
     public Map<Point, Node> getOpen() {
@@ -167,11 +130,8 @@ public class AStarPathFinder implements PathFinder {
                 return false;
             Node other = (Node) obj;
             if (point == null) {
-                if (other.point != null)
-                    return false;
-            } else if (!point.equals(other.point))
-                return false;
-            return true;
+                return other.point == null;
+            } else return point.equals(other.point);
         }
         
         int F() {
@@ -212,6 +172,19 @@ public class AStarPathFinder implements PathFinder {
             _f = null;
             _g = null;
             _parent = parent;
+        }
+
+        public List<Point> getPath() {
+            List<Point> result = new ArrayList<>();
+
+            Node targetNode = this;
+
+            while (targetNode._parent != null) {
+                result.add(targetNode.point);
+                targetNode = targetNode._parent;
+            }
+
+            return result;
         }
         
         @Override

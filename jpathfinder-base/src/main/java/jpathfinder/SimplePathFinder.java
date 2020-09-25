@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SimplePathFinder extends AbstractPathFinder {
-    private final Map<Point, Integer> _queue = new HashMap<Point, Integer>();//Collections.synchronizedMap(new HashMap<Point, Integer>());
+    private final Map<Point, Integer> _queue = new HashMap<>();
 
     private final PathField pathField;
     private final Point from;
@@ -26,14 +26,14 @@ public class SimplePathFinder extends AbstractPathFinder {
         _queue.clear();
         _queue.put(to, 0);
         while (!_queue.containsKey(from)) {
-            Map<Point, Integer> next = new LinkedHashMap<Point, Integer>(_queue);
+            Map<Point, Integer> next = new LinkedHashMap<>(_queue);
 //            try {
 //                Thread.sleep(100);
 //            } catch (InterruptedException e) {
 //            }
 //            synchronized (_queue) {
                 for (Map.Entry<Point, Integer> entry : _queue.entrySet() ) {
-                    Map<Point, Integer> adjacents = new LinkedHashMap<Point, Integer>();
+                    Map<Point, Integer> adjacents = new LinkedHashMap<>();
                     for (Point point : getAdjacents(entry.getKey())) {
                         adjacents.put(point, 1 + entry.getValue());
                     }
@@ -45,7 +45,7 @@ public class SimplePathFinder extends AbstractPathFinder {
                         }
                         if (!pathField.contains(aentry.getKey())) {
                             i.remove();
-                        } else if (pathField.isOccupied(aentry.getKey(), from)) {
+                        } else if (pathField.isOccupied(aentry.getKey())) {
                             i.remove();
                         } else {
                             Integer value = _queue.get(aentry.getKey());
@@ -62,7 +62,7 @@ public class SimplePathFinder extends AbstractPathFinder {
         }
         Point point = from;
 
-        List<Point> result = new ArrayList<Point>();
+        List<Point> result = new ArrayList<>();
 
         while (true) {
             Point minPoint = null;
